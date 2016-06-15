@@ -2,6 +2,8 @@
 
 Tools and scripts to install self-hosted [inventaire](https://github.com/inventaire/inventaire) instance
 
+![deploy](https://qzprod.files.wordpress.com/2014/06/matrix-computers.jpg?quality=80&strip=all&w=500)
+
 ## Installation
 ### Ubuntu
 On your server:
