@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+
+read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
+
+# if domain name is an empty string, default to inventaire.io
+[ -z "$DOMAIN_NAME" ] && DOMAIN_NAME='inventaire.io'
+
+echo 'PROJECT_ROOT' $PROJECT_ROOT
+echo 'DOMAIN_NAME' $DOMAIN_NAME
+
+# customizing the Nginx config to the local needs
+cat inventaire.original.nginx |
+ $replace 'PROJECT_ROOT' $PROJECT_ROOT |
+ $replace 'DOMAIN_NAME' $DOMAIN_NAME > inventaire.custom.nginx
+
+sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
+mkdir -p /tmp/images /tmp/nginx/resize
+sudo chmod 666 /tmp/images /tmp/nginx/resize
+
+touch $LOGS_FOLDER/nginx_static_access.log
+touch $LOGS_FOLDER/nginx_static_errors.log
+sudo chmod 666 $LOGS_FOLDER/nginx_static*
+
+# TODO: automate SSL setup with Let's Encrypt
+echo "Here is where to place your SSL keys:"
+echo "
+$PROJECT_ROOT/nginx/bundle.crt
+$PROJECT_ROOT/nginx/inventaire.key
+$PROJECT_ROOT/nginx/dhparams.pem
+"
+
+read -p "Press Enter once those files are in place... " key
+
+sudo nginx -s reload
+echo "nginx setup done"

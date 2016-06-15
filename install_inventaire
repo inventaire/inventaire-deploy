@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+git clone http://github.com/inventaire/inventaire
+cd inventaire
+npm install --production

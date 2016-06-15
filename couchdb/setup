@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+echo "Generating self-signed keys for CouchDB"
+ openssl req -x509 -sha256 -nodes -days 1826 -newkey rsa:2048 -keyout couch.key -out couch.crt
+
+# customizing the Couchdb to the local needs
+cat local.original.ini |
+ $replace 'PROJECT_ROOT' $PROJECT_ROOT > local.custom.ini
+
+echo 'giving ownership of the keys and config files to couchdb'
+sudo chown couchdb:couchdb couch.crt couch.key local.custom.ini
+sudo chmod 600 couch.crt couch.key local.custom.ini
+sudo cp local.custom.ini /etc/couchdb/local.ini
+
+read -p "Enter a CouchDB admin name (defaults to admin) " COUCH_USER
+[ -z "$COUCH_USER" ] && COUCH_USER='admin'
+
+read -p "Enter the admin's password (defaults to admin) " COUCH_PW
+[ -z "$COUCH_PW" ] && COUCH_PW='admin'
+sudo service couchdb restart
+
+curl -kX PUT https://localhost:6984/_config/admins/$COUCH_USER -d '"'$COUCH_PW'"'
+# uncomment require_valid_user
+sudo sed -i "s/^;require_valid_user/require_valid_user/g" /etc/couchdb/local.ini
+sudo service couchdb restart
+
+# Databases will then be created by the nodejs server at first startup
+# You still got to setup database replication

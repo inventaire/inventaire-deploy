@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+export PROJECTROOT=$PWD
+export NGINX_FOLDER=$PWD/nginx
+export COUCHDB_FOLDER=$PWD/couchdb
+export SERVER_FOLDER=$PWD/inventaire
+export LOGS_FOLDER=$PWD/inventaire/logs
+export replace=$PROJECT_ROOT/lib/replace.coffee
+
+sudo add-apt-repository ppa:couchdb/stable -y
+sudo apt-get update -y
+sudo apt-get install curl zsh git nginx couchdb graphicsmagick openssl -y
+
+./install_node
+./install_inventaire
+cd NGINX_FOLDER && ./setup
+cd $COUCHDB_FOLDER && ./setup
+cd $SERVER_FOLDER && npm run daemon
