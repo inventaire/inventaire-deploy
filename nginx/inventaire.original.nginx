@@ -1,3 +1,6 @@
+# PROJECT_ROOT and DOMAIN_NAME are strings to which will be substituted paths
+# during the installation process: see ./setup
+
 server_tokens off;
 
 server {
@@ -158,7 +161,7 @@ server {
             #setting prerender as a variable forces DNS resolution since nginx caches IPs and doesnt play well with load balancing
             # set $prerender "92.222.76.42:3000";
             rewrite .* /$scheme://$host$request_uri? break;
-            proxy_pass http://136.243.86.191:3000;
+            proxy_pass PRERENDER_INSTANCE;
         }
         if ($prerender = 0) {
             # source: https://gist.github.com/plentz/6737338
