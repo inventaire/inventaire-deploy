@@ -25,8 +25,8 @@ By default, this setup uses the same services as [inventaire.io](https://inventa
 
 ### Prerender
 * repo: [inventaire/prerender](https://github.com/inventaire/prerender)
-* live: [http://136.243.86.191:3000](http://136.243.86.191:3000)
-* setup: once you installed your instance, replace `http://136.243.86.191:3000` by your own instance url in [inventaire.original.nginx](https://github.com/inventaire/inventaire-deploy/blob/master/nginx/inventaire.original.nginx) (or directly in `/etc/nginx/sites-available/default` if you already run the installation process)
+* live: [http://prerender.inventaire.io:3000](http://prerender.inventaire.io:3000) (Only responding to whitelisted ips)
+* setup: once you installed your instance, replace `http://prerender.inventaire.io:3000` by your own instance url in [inventaire.original.nginx](https://github.com/inventaire/inventaire-deploy/blob/master/nginx/inventaire.original.nginx) (or directly in `/etc/nginx/sites-available/default` if you already run the installation process)
 
 ### Wikidata Subset Search Engine
 * repo: [inventaire/wikidata-subset-search-engine](https://github.com/inventaire/wikidata-subset-search-engine)
