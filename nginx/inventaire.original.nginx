@@ -1,5 +1,5 @@
-# PROJECT_ROOT and DOMAIN_NAME are strings to which will be substituted paths
-# during the installation process: see ./setup
+# PROJECT_ROOT, DOMAIN_NAME and PRERENDER_INSTANCE are strings to which
+# will be substituted paths during the installation process: see ./setup
 
 server_tokens off;
 

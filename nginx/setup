@@ -1,17 +1,21 @@
 #!/usr/bin/env sh
 
 read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
-
 # if domain name is an empty string, default to inventaire.io
 [ -z "$DOMAIN_NAME" ] && DOMAIN_NAME='inventaire.io'
 
+read -p "Enter a domain name (defaults to inventaire.io) " PRERENDER_INSTANCE
+[ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='inventaire.io'
+
 echo 'PROJECT_ROOT' $PROJECT_ROOT
+echo 'PRERENDER_INSTANCE' $DOMAIN_NAME
 echo 'DOMAIN_NAME' $DOMAIN_NAME
 
 # customizing the Nginx config to the local needs
 cat inventaire.original.nginx |
  $replace 'PROJECT_ROOT' $PROJECT_ROOT |
- $replace 'DOMAIN_NAME' $DOMAIN_NAME > inventaire.custom.nginx
+ $replace 'DOMAIN_NAME' $DOMAIN_NAME |
+ $replace 'PRERENDER_INSTANCE' $PRERENDER_INSTANCE > inventaire.custom.nginx
 
 sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
 mkdir -p /tmp/images /tmp/nginx/resize
