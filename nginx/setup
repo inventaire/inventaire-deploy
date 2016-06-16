@@ -4,8 +4,8 @@ read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
 # if domain name is an empty string, default to inventaire.io
 [ -z "$DOMAIN_NAME" ] && DOMAIN_NAME='inventaire.io'
 
-read -p "Enter a domain name (defaults to inventaire.io) " PRERENDER_INSTANCE
-[ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='inventaire.io'
+read -p "Enter the url of your Prerender instance (defaults to http://prerender.inventaire.io:3000) " PRERENDER_INSTANCE
+[ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='http://prerender.inventaire.io:3000'
 
 echo 'PROJECT_ROOT' $PROJECT_ROOT
 echo 'PRERENDER_INSTANCE' $DOMAIN_NAME
