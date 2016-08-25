@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+# See also: Wikidata Subset Search Engine setup
+# https://github.com/inventaire/wikidata-subset-search-engine
+
+# first install java (elasticsearch dependency)
+sudo add-apt-repository ppa:webupd8team/java -y
+sudo apt-get update
+# not libre, but recommanded by ElasticSearch :/
+sudo apt-get install oracle-java8-installer -y
+
+
+# install elasticsearch
+# see official documentation https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html
+
+# Add ElasticSearch repositories and install
+wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
+sudo apt-get update && sudo apt-get install elasticsearch
+
+# Start ElasticSearch at startup
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable elasticsearch.service
+sudo /bin/systemctl start elasticsearch.service
+
+# Lets wait a little while ElasticSearch starts
+sleep 5
+# Make sure service is running
+curl http://localhost:9200
