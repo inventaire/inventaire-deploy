@@ -11,11 +11,13 @@ echo 'PROJECT_ROOT' $PROJECT_ROOT
 echo 'PRERENDER_INSTANCE' $DOMAIN_NAME
 echo 'DOMAIN_NAME' $DOMAIN_NAME
 
-# customizing the Nginx config to the local needs
+# Customizing the Nginx config to the local needs.
+# Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
+# cf http://stackoverflow.com/a/9366940/3324977
 cat inventaire.original.nginx |
- $replace 'PROJECT_ROOT' $PROJECT_ROOT |
- $replace 'DOMAIN_NAME' $DOMAIN_NAME |
- $replace 'PRERENDER_INSTANCE' $PRERENDER_INSTANCE > inventaire.custom.nginx
+ sed "s@PROJECT_ROOT@$PROJECT_ROOT@g" |
+ sed "s@DOMAIN_NAME@$DOMAIN_NAME@g" |
+ sed "s@PRERENDER_INSTANCE@$PRERENDER_INSTANCE@g" > inventaire.custom.nginx
 
 sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
 mkdir -p /tmp/images /tmp/nginx/resize

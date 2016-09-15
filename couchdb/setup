@@ -1,11 +1,12 @@
 #!/usr/bin/env sh
 
 echo "Generating self-signed keys for CouchDB"
- openssl req -x509 -sha256 -nodes -days 1826 -newkey rsa:2048 -keyout couch.key -out couch.crt
+openssl req -x509 -sha256 -nodes -days 1826 -newkey rsa:2048 -keyout couch.key -out couch.crt
 
-# customizing the Couchdb to the local needs
-cat local.original.ini |
- $replace 'PROJECT_ROOT' $PROJECT_ROOT > local.custom.ini
+# Customizing the Couchdb to the local needs.
+# Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
+# cf http://stackoverflow.com/a/9366940/3324977
+cat local.original.ini |sed "s@PROJECT_ROOT@$PROJECT_ROOT@g" > local.custom.ini
 
 echo 'giving ownership of the keys and config files to couchdb'
 sudo chown couchdb:couchdb couch.crt couch.key local.custom.ini

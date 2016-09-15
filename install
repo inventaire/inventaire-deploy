@@ -1,11 +1,10 @@
 #!/usr/bin/env sh
 
-export PROJECTROOT=$PWD
-export NGINX_FOLDER=$PWD/nginx
-export COUCHDB_FOLDER=$PWD/couchdb
-export SERVER_FOLDER=$PWD/inventaire
-export LOGS_FOLDER=$PWD/inventaire/logs
-export replace=$PROJECT_ROOT/lib/replace.coffee
+export PROJECT_ROOT=$(pwd)
+export NGINX_FOLDER=$PROJECT_ROOT/nginx
+export COUCHDB_FOLDER=$PROJECT_ROOT/couchdb
+export SERVER_FOLDER=$PROJECT_ROOT/inventaire
+export LOGS_FOLDER=$PROJECT_ROOT/inventaire/logs
 
 sudo add-apt-repository ppa:couchdb/stable -y
 sudo apt-get update -y
@@ -15,6 +14,6 @@ sudo apt-get install curl zsh git nginx couchdb graphicsmagick openssl -y
 cd NGINX_FOLDER && ./setup
 cd $COUCHDB_FOLDER && ./setup
 # Synchronization between CouchDB and ElasticSearch will be handled by the server (using couch2elastic4sync subprocessses)
-cd $PROJECTROOT && ./install_elasticsearch
-cd $PROJECTROOT && ./install_inventaire
+cd $PROJECT_ROOT && ./install_elasticsearch
+cd $PROJECT_ROOT && ./install_inventaire
 cd $SERVER_FOLDER && npm run daemon
