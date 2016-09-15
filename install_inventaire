@@ -2,3 +2,22 @@
 git clone http://github.com/inventaire/inventaire
 cd inventaire
 npm install --production
+
+# Update the NVM executables path
+INVFOLDER=$(pwd)
+HOMEFOLDER=$HOME
+NODEVERSION=$(node -v)
+
+cd $PROJECT_ROOT
+
+cat ./systemd/inventaire.service.original |
+  sed "s/INVFOLDER/${INVFOLDER}/g" |
+  sed "s/HOMEFOLDER/${HOMEFOLDER}/g" |
+  sed "s/NODEVERSION/${NODEVERSION}/g" > ./systemd/inventaire.service
+
+# Copy instead of simply linking as some system fail to find the symbolic link target (Ubuntu 15.10)
+sudo cp ./systemd/inventaire.service /etc/systemd/system/
+
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable inventaire.service
+sudo /bin/systemctl start inventaire.service

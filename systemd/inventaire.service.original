@@ -1,0 +1,20 @@
+# Documentation:
+# https://www.freedesktop.org/software/systemd/man/systemd.exec.html
+# https://rocketeer.be/articles/deploying-node-js-with-systemd/
+# https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/sect-Managing_Services_with_systemd-Unit_Files.html
+
+[Unit]
+Description=inventaire
+
+[Service]
+ExecStart=HOMEFOLDER/.nvm/versions/node/NODEVERSION/bin/coffee INVFOLDER/server.coffee
+WorkingDirectory=INVFOLDER/
+Environment=PATH=HOMEFOLDER/.nvm/versions/node/NODEVERSION/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
+Environment=NODE_ENV=production
+User=admin
+Group=admin
+Restart=always
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -16,4 +16,3 @@ cd $COUCHDB_FOLDER && ./setup
 # Synchronization between CouchDB and ElasticSearch will be handled by the server (using couch2elastic4sync subprocessses)
 cd $PROJECT_ROOT && ./install_elasticsearch
 cd $PROJECT_ROOT && ./install_inventaire
-cd $SERVER_FOLDER && npm run daemon
