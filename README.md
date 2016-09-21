@@ -32,3 +32,6 @@ By default, this setup uses the same services as [inventaire.io](https://inventa
 * repo: [inventaire/wikidata-subset-search-engine](https://github.com/inventaire/wikidata-subset-search-engine)
 * live: [https://data.inventaire.io/](https://data.inventaire.io/)
 * setup: integration is very much in progress and might change a few times in the coming weeks after this writing so the most future-proof advice there is to make a global search in the [client's code](http://github.com/inventaire/inventaire-client) and to replace every instance of `data.inventaire.io` by your own url
+
+## Stack Map
+[![stack](https://raw.githubusercontent.com/inventaire/stack/master/snapshots/stack-from-deploy.png)](https://inventaire.github.io/stack/)
