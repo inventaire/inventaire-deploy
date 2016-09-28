@@ -18,12 +18,25 @@ wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add 
 echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
 sudo apt-get update && sudo apt-get install elasticsearch
 
+# ES_HOME=/usr/share/elasticsearch
+# CONF_DIR=/etc/elasticsearch
+# DATA_DIR=/var/lib/elasticsearch
+# LOG_DIR=/var/log/elasticsearch
+# PID_DIR=/var/run/elasticsearch
+# EnvironmentFile=/etc/default/elasticsearch
+# ServiceFile=/usr/lib/systemd/system/elasticsearch.service
+
+# Uncomment to log all requests
+# /!\ it will be fat and won't be available from journalctl but in dedicated files in /var/log/elasticsearch
+# source: http://blog.florian-hopf.de/2016/03/logging-requests-to-elasticsearch.html
+
+# echo "
+# .search.slowlog.threshold.query.debug: 0s
+# .search.slowlog.threshold.fetch.debug: 0s
+# .indexing.slowlog.threshold.index.debug: 0s
+# " |sudo tee /etc/elasticsearch/elasticsearch.yml
+
 # Start ElasticSearch at startup
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
-
-# Lets wait a little while ElasticSearch starts
-sleep 5
-# Make sure service is running
-curl http://localhost:9200
