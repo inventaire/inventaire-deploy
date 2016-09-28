@@ -4,11 +4,11 @@ read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
 # if domain name is an empty string, default to inventaire.io
 [ -z "$DOMAIN_NAME" ] && DOMAIN_NAME='inventaire.io'
 
-read -p "Enter the url of your Prerender instance (defaults to http://prerender.inventaire.io:3000) " PRERENDER_INSTANCE
-[ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='http://prerender.inventaire.io:3000'
+read -p "Enter the url of your Prerender (https://github.com/inventaire/prerender) instance (defaults to http://localhost:3000) " PRERENDER_INSTANCE
+[ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='http://localhost:3000'
 
 echo 'PROJECT_ROOT' $PROJECT_ROOT
-echo 'PRERENDER_INSTANCE' $DOMAIN_NAME
+echo 'PRERENDER_INSTANCE' $PRERENDER_INSTANCE
 echo 'DOMAIN_NAME' $DOMAIN_NAME
 
 # Customizing the Nginx config to the local needs.
@@ -30,7 +30,7 @@ $PROJECT_ROOT/nginx/bundle.crt
 $PROJECT_ROOT/nginx/inventaire.key
 "
 
-read -p "Press Enter once those files are in place... " key
+read -p "Press Enter once those files are in place... (if you choose to do it later, simply run `sudo nginx -s reload`)" key
 
 # generate dhparam.pem file
 openssl dhparam -out $PROJECT_ROOT/nginx/dhparam.pem 2048
