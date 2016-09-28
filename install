@@ -11,7 +11,7 @@ sudo apt-get update -y
 sudo apt-get install curl zsh git nginx couchdb graphicsmagick openssl -y
 
 ./install_node
-cd NGINX_FOLDER && ./setup
+cd $NGINX_FOLDER && ./setup
 cd $COUCHDB_FOLDER && ./setup
 # Synchronization between CouchDB and ElasticSearch will be handled by the server (using couch2elastic4sync subprocessses)
 cd $PROJECT_ROOT && ./install_elasticsearch
