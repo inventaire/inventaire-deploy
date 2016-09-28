@@ -8,8 +8,10 @@ Tools and scripts to install self-hosted [inventaire](https://github.com/inventa
 ### Ubuntu
 On your server:
 ```sh
+# if git isn't installed already
+sudo apt-get install git
 # cloning the deployment tools in the local directory
-git clone https://github.com/inventaire/inventaire-deploy .
+git clone https://github.com/inventaire/inventaire-deploy
 # start the magic
 ./install
 ```

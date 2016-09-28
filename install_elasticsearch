@@ -19,9 +19,9 @@ echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sud
 sudo apt-get update && sudo apt-get install elasticsearch
 
 # Start ElasticSearch at startup
-sudo /bin/systemctl daemon-reload
-sudo /bin/systemctl enable elasticsearch.service
-sudo /bin/systemctl start elasticsearch.service
+sudo systemctl daemon-reload
+sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
 
 # Lets wait a little while ElasticSearch starts
 sleep 5

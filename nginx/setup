@@ -39,9 +39,9 @@ openssl dhparam -out $PROJECT_ROOT/nginx/dhparam.pem 2048
 sudo cp $PROJECT_ROOT/nginx/nginx.service /etc/systemd/system/
 
 # setup nginx systemd service
-sudo /bin/systemctl daemon-reload
-sudo /bin/systemctl enable nginx.service
-sudo /bin/systemctl start nginx.service
+sudo systemctl daemon-reload
+sudo systemctl enable nginx.service
+sudo systemctl start nginx.service
 
 # reload nginx configuration
 sudo nginx -s reload
