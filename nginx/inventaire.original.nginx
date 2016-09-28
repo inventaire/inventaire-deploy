@@ -3,13 +3,30 @@
 
 server_tokens off;
 
+# Defining a log format arbitrary named "custom"
+# doc: http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
+log_format custom '$remote_addr - $remote_user "$request" $status'
+                  ' | time: $request_time'
+                  ' | length: req $request_length / res $body_bytes_sent'
+                  ' | agent: $http_user_agent'
+                  ' | referer: $http_referer'
+                  ' | gzip ratio: $gzip_ratio';
+
+# Access logs from journalctl
+access_log syslog:server=unix:/dev/log custom;
+error_log syslog:server=unix:/dev/log;
+
 server {
-    listen              80;
-    server_name         DOMAIN_NAME www.DOMAIN_NAME;
-    return              301 https://$server_name$request_uri;
+    # source: https://www.nginx.com/blog/nginx-1-9-5/
+    listen 80;
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }
+
 server {
-    listen              443 ssl spdy;
+    listen              443 ssl http2;
+    server_name         DOMAIN_NAME www.DOMAIN_NAME;
     ssl_certificate     PROJECT_ROOT/nginx/bundle.crt;
     ssl_certificate_key PROJECT_ROOT/nginx/inventaire.key;
 
@@ -17,10 +34,12 @@ server {
     ssl_prefer_server_ciphers on;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     ssl_session_timeout 5m;
-    ssl_session_cache shared:SSL:50m;
-    ssl_dhparam        PROJECT_ROOT/nginx/dhparams.pem;
+    ssl_session_cache   shared:SSL:50m;
+    ssl_session_tickets off;
+    ssl_dhparam         PROJECT_ROOT/nginx/dhparams.pem;
     ssl_ciphers         'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
-    ##
+    ssl_stapling        on;
+    ssl_stapling_verify on;
 
     # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
     add_header X-Content-Type-Options "nosniff";
@@ -29,10 +48,6 @@ server {
 
     gzip on;
     gzip_types *;
-
-    access_log PROJECT_ROOT/inventaire/logs/nginx_static_access.log;
-    error_log PROJECT_ROOT/inventaire/logs/nginx_static_errors.log;
-
 
     # On-The-Fly Image Resizer
 
@@ -74,7 +89,7 @@ server {
         proxy_http_version 1.1;
 
         if (!-f $request_filename) {
-            # /!\ BEWARE OF THE PROTOCOL
+            # Passing the request to the inventaire instance
             proxy_pass http://127.0.0.1:3006;
             break;
         }

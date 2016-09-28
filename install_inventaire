@@ -15,7 +15,7 @@ cat ./systemd/inventaire.service.original |
   sed "s/HOMEFOLDER/${HOMEFOLDER}/g" |
   sed "s/NODEVERSION/${NODEVERSION}/g" > ./systemd/inventaire.service
 
-# Copy instead of simply linking as some system fail to find the symbolic link target (Ubuntu 15.10)
+# Copy instead of simply linking as some system fail to find the symbolic link target
 sudo cp ./systemd/inventaire.service /etc/systemd/system/
 
 sudo /bin/systemctl daemon-reload
