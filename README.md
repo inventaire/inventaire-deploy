@@ -15,6 +15,10 @@ git clone https://github.com/inventaire/inventaire-deploy
 # start the magic
 ./install
 ```
+You might also want to configure your firewall:
+```sh
+./setup_firewall
+```
 
 ### Other environments
 one environment -> one branch

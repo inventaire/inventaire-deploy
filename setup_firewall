@@ -1,0 +1,10 @@
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+
+read -p "Enter the ip from the machine where your backup CouchDB is running (let empty to pass)" BACKUPIP
+[ ! -z "$BACKUPIP" ] && sudo ufw allow from $BACKUPIP to any port 6984
+
+sudo ufw enable
