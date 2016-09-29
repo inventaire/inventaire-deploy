@@ -1,7 +1,12 @@
 #!/usr/bin/env sh
 git clone http://github.com/inventaire/inventaire
 cd inventaire
+# /!\ currently fails because the 'inv-dbs-list' module can't be found:
+# it was unpublished from NPM but inventaire/inventaire master branch is still not aware of it
+# Temporary workaround: checkout 'dev' branch in both inventaire/inventaire and inventaire/inventaire-client
 npm install --production
+
+# Setup inventaire.service
 
 # Update the NVM executables path
 INVFOLDER=$(pwd)
