@@ -15,14 +15,17 @@ NODEVERSION=$(node -v)
 
 cd $PROJECT_ROOT
 
+# Customizing the Nginx config to the local needs.
+# Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
+# cf http://stackoverflow.com/a/9366940/3324977
 cat ./systemd/inventaire.service.original |
-  sed "s/INVFOLDER/${INVFOLDER}/g" |
-  sed "s/HOMEFOLDER/${HOMEFOLDER}/g" |
-  sed "s/NODEVERSION/${NODEVERSION}/g" > ./systemd/inventaire.service
+  sed "s@INVFOLDER@${INVFOLDER}@g" |
+  sed "s@HOMEFOLDER@${HOMEFOLDER}@g" |
+  sed "s@USERNAME@$USERNAME@g" |
+  sed "s@NODEVERSION@${NODEVERSION}@g" > ./systemd/inventaire.service
 
 # Copy instead of simply linking as some system fail to find the symbolic link target
 sudo cp ./systemd/inventaire.service /etc/systemd/system/
-
 sudo systemctl daemon-reload
 sudo systemctl enable inventaire.service
 sudo systemctl start inventaire.service
