@@ -1,5 +1,4 @@
-# PROJECT_ROOT, DOMAIN_NAME and PRERENDER_INSTANCE are strings to which
-# will be substituted paths during the installation process: see ./setup
+# PROJECT_ROOT, DOMAIN_NAME and PRERENDER_INSTANCE are set during nginx setup script
 
 server_tokens off;
 
@@ -46,6 +45,9 @@ server {
 
     client_max_body_size 5M;
 
+    # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
+    # https://en.wikipedia.org/wiki/BREACH_(security_exploit)#Mitigation
+    # http://security.stackexchange.com/questions/39925/breach-a-new-attack-against-http-what-can-be-done
     gzip on;
     gzip_types *;
 
