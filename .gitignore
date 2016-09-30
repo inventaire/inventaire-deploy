@@ -2,4 +2,5 @@
 *.crt
 *.key
 systemd/inventaire.service
+systemd/inventaire.service-local
 couchdb/local.custom.ini
