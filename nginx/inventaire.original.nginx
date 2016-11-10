@@ -2,7 +2,7 @@
 
 server_tokens off;
 
-# Defining a log format arbitrary named "custom"
+# Defining a log format arbitrary named "custom"
 # doc: http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
 log_format custom '$remote_addr - $remote_user "$request" $status'
                   ' | time: $request_time'
@@ -46,7 +46,7 @@ server {
     client_max_body_size 5M;
 
     # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
-    # https://en.wikipedia.org/wiki/BREACH_(security_exploit)#Mitigation
+    # https://en.wikipedia.org/wiki/BREACH_(security_exploit)#Mitigation
     # http://security.stackexchange.com/questions/39925/breach-a-new-attack-against-http-what-can-be-done
     gzip on;
     gzip_types *;
@@ -91,7 +91,7 @@ server {
         proxy_http_version 1.1;
 
         if (!-f $request_filename) {
-            # Passing the request to the inventaire instance
+            # Passing the request to the inventaire instance
             proxy_pass http://127.0.0.1:3006;
             break;
         }
@@ -127,9 +127,6 @@ server {
         # proxy_set_header Connection "upgrade";
     }
 
-    location = /guidelines-and-inspiration {
-        return 302 http://zombo.com;
-    }
     location = /favicon.ico {
         try_files /public/$uri /public/images/$uri;
         expires 30d;
