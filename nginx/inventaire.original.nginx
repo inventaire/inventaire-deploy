@@ -104,14 +104,14 @@ server {
         gzip_static on;
         expires 1y;
         add_header Cache-Control "public";
+        add_header 'Access-Control-Allow-Origin' '*' always;
+        add_header 'Access-Control-Allow-Methods' 'GET' always;
     }
 
     # pass the request to the node.js server
     # with some correct headers for proxy-awareness
     location /api {
-        add_header 'Access-Control-Allow-Origin' '*' always;
-        add_header 'Access-Control-Allow-Credentials' 'true' always;
-        add_header 'Access-Control-Allow-Methods' 'GET, POST' always;
+        # Let the server decide when CORS headers should be added
 
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
