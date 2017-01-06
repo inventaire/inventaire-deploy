@@ -41,7 +41,7 @@ server {
     ssl_stapling_verify on;
 
     # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
-    add_header X-Content-Type-Options "nosniff";
+    add_header X-Content-Type-Options "nosniff" always;
 
     client_max_body_size 5M;
 
