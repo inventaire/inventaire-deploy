@@ -179,19 +179,15 @@ server {
         }
         if ($prerender = 0) {
             # source: https://gist.github.com/plentz/6737338
-            add_header X-XSS-Protection "1; mode=block";
-            add_header X-Frame-Options "SAMEORIGIN";
-            add_header Strict-Transport-Security "max-age=31536000;";
+            add_header X-XSS-Protection "1; mode=block; report-uri=/api/logs/public;" always;
+            add_header X-Frame-Options "SAMEORIGIN" always;
+            add_header Strict-Transport-Security "max-age=31536000;" always;
 
-            set $csp "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://piwik.allmende.io https://www.wikidata.org; style-src 'self' 'unsafe-inline'; font-face 'self'; child-src 'self' *.wikipedia.org; img-src *; connect-src *; report-uri /api/logs/public";
-
-            # BEFORE REACTIVATING:
-            # - check DataUrl (used by profile picture)
-            # - check new Worker(BlobUrl) (used by quagga.js. see https://github.com/greasemonkey/greasemonkey/issues/1803 for bug)
-            add_header Content-Security-Policy-Report-Only $csp;
-            # add_header Content-Security-Policy $csp; # Standard
-            # add_header X-Content-Security-Policy $csp; # Firefox <23 & IE 10, 11
-            # add_header X-WebKit-CSP $csp; # Safari <7 and Chrome <25
+            # Keep in sync with server/middlewares/security.coffee@inventaire/inventaire
+            set $csp "default-src 'self'; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://api.tiles.mapbox.com data:; report-uri /api/logs/public;";
+            add_header Content-Security-Policy $csp; # Standard
+            add_header X-Content-Security-Policy $csp; # Firefox <23 & IE 10, 11
+            add_header X-WebKit-CSP $csp; # Safari <7 and Chrome <25
 
             # index.html should always be fresh out of the server
             add_header 'Cache-Control' 'max-age=0, no-cache, no-store, must-revalidate';
