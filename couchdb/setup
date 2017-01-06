@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
 
 echo "Generating self-signed keys for CouchDB"
 echo "(can't be skiped but you can let them all fields blank)"
@@ -15,10 +15,10 @@ sudo chown couchdb:couchdb couch.crt couch.key local.custom.ini
 sudo chmod 600 couch.crt couch.key local.custom.ini
 sudo cp local.custom.ini /etc/couchdb/local.ini
 
-read -p "Enter a CouchDB admin name (defaults to $USERNAME) " COUCH_USER
+read "COUCH_USER?Enter a CouchDB admin name (defaults to $USERNAME) "
 [ -z "$COUCH_USER" ] && COUCH_USER=$USERNAME
 
-read -p "Enter the admin's password (or get a randomly generated password if let blank) " COUCH_PW
+read "COUCH_PW?Enter the admin's password (or get a randomly generated password if let blank) "
 # Random password generation source: http://security.stackexchange.com/questions/71187/one-liner-to-create-passwords-in-linux
 [ -z "$COUCH_PW" ] && COUCH_PW=$(mktemp -u XXXXXXXXXXXXXXXXXXXXXXXXXXX) && echo "your password: $COUCH_PW"
 
