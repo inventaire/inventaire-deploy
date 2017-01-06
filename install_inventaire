@@ -24,6 +24,11 @@ cat ./systemd/inventaire.service.original |
   sed "s@USERNAME@$USERNAME@g" |
   sed "s@NODEVERSION@${NODEVERSION}@g" > ./systemd/inventaire.service
 
+# Make logs persistant
+# https://doc.opensuse.org/documentation/leap/reference/html/book.opensuse.reference/cha.journalctl.html#journalctl.persistent
+sudo sed -i 's/#Storage=auto/Storage=persistent/' /etc/systemd/journald.conf
+sudo systemctl restart systemd-journald
+
 # Copy instead of simply linking as some system fail to find the symbolic link target
 sudo cp ./systemd/inventaire.service /etc/systemd/system/
 sudo systemctl daemon-reload
