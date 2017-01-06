@@ -34,3 +34,7 @@ sudo service couchdb restart
 
 # Databases will then be created by the nodejs server at first startup
 # You still got to setup database replication
+
+# Install couchdb-dump for future uses
+curl https://raw.githubusercontent.com/danielebailo/couchdb-dump/e873182bf81bd5243f13999b5feeb99e0d79f1f3/couchdb-backup.sh | sudo tee /usr/local/bin/couchdb-backup
+sudo chmod 777 /usr/local/bin/couchdb-backup
