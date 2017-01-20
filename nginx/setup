@@ -13,7 +13,7 @@ echo 'DOMAIN_NAME' $DOMAIN_NAME
 
 # Customizing the Nginx config to the local needs.
 # Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
-# cf http://stackoverflow.com/a/9366940/3324977
+# cf http://stackoverflow.com/a/9366940/3324977
 cat inventaire.original.nginx |
  sed "s@PROJECT_ROOT@$PROJECT_ROOT@g" |
  sed "s@DOMAIN_NAME@$DOMAIN_NAME@g" |
@@ -38,7 +38,7 @@ openssl dhparam -out $PROJECT_ROOT/nginx/dhparam.pem 2048
 # Copy instead of simply linking as some system fail to find the symbolic link target
 sudo cp $PROJECT_ROOT/nginx/nginx.service /etc/systemd/system/
 
-# setup nginx systemd service
+# setup nginx systemd service
 sudo systemctl daemon-reload
 sudo systemctl enable nginx.service
 sudo systemctl start nginx.service

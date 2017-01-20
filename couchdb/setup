@@ -7,7 +7,7 @@ echo "--------- done with self-signed certificated: now back to questions that y
 
 # Customizing the Couchdb to the local needs.
 # Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
-# cf http://stackoverflow.com/a/9366940/3324977
+# cf http://stackoverflow.com/a/9366940/3324977
 cat local.original.ini |sed "s@PROJECT_ROOT@$PROJECT_ROOT@g" > local.custom.ini
 
 echo 'giving ownership of the keys and config files to couchdb'
@@ -19,7 +19,7 @@ read "COUCH_USER?Enter a CouchDB admin name (defaults to $USERNAME) "
 [ -z "$COUCH_USER" ] && COUCH_USER=$USERNAME
 
 read "COUCH_PW?Enter the admin's password (or get a randomly generated password if let blank) "
-# Random password generation source: http://security.stackexchange.com/questions/71187/one-liner-to-create-passwords-in-linux
+# Random password generation source: http://security.stackexchange.com/questions/71187/one-liner-to-create-passwords-in-linux
 [ -z "$COUCH_PW" ] && COUCH_PW=$(mktemp -u XXXXXXXXXXXXXXXXXXXXXXXXXXX) && echo "your password: $COUCH_PW"
 
 sudo service couchdb restart

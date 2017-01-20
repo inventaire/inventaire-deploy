@@ -48,6 +48,7 @@ server {
     # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
     # https://en.wikipedia.org/wiki/BREACH_(security_exploit)#Mitigation
     # http://security.stackexchange.com/questions/39925/breach-a-new-attack-against-http-what-can-be-done
+    # It could be that it was solved by HTTP/2 \o/ https://blog.cloudflare.com/hpack-the-silent-killer-feature-of-http-2
     gzip on;
     gzip_types *;
 
@@ -111,7 +112,7 @@ server {
     # pass the request to the node.js server
     # with some correct headers for proxy-awareness
     location /api {
-        # Let the server decide when CORS headers should be added
+        # Let the server decide when CORS headers should be added
 
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
