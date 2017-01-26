@@ -5,4 +5,5 @@ systemd/inventaire.service
 systemd/inventaire.service-local
 couchdb/local.custom.ini
 backyard
+node_modules
 
