@@ -1,0 +1,49 @@
+alias diskspace="df -h"
+alias agi="sudo apt-get install"
+alias agud="sudo apt-get update"
+alias agug="sudo apt-get upgrade"
+alias agu="agud && agug"
+alias agar="sudo apt-get autoremove"
+alias neteth="sudo nethogs eth0"
+alias real="source ~/.aliases"
+alias edal="vi +$ ~/.aliases"
+alias ww='weightwatcher'
+alias weightwatcher='du -s -h'
+alias wh=which
+alias cdp="cd .."
+alias cdpp="cd ../.."
+alias ls="ls --color=auto"
+alias ll="ls -lha"
+alias heaviest="du -sk * | sort -rn| head -n 20"
+
+alias npmi='npm install'
+alias npmip'npm install --production'
+alias npmig='npm install -g'
+alias npmug='npm uninstall -g'
+alias npms="npm start"
+alias npmt="npm test"
+alias npmtw="npm run test-watch"
+alias npmu="npm uninstall"
+alias npmis="npm install --save"
+alias npmisd="npm install --save-dev"
+alias npmusd="npm uninstall --save-dev"
+alias npml="npm run lint"
+alias npmb="npm run build"
+alias npmbw="npm run build-watch"
+alias npmd="npm run dist"
+alias npmw="npm run watch"
+#alias npmd="npm run debug"
+alias npmus="npm uninstall --save"
+
+alias gitl="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+alias ga="git add"
+alias gr="git reset"
+alias gs="git status"
+alias ungc="git reset --soft HEAD^"
+alias gd="git diff"
+alias gdc="git diff --cached"
+gjump () {
+  git branch -D $1 && git co -b $1
+}
+
+export LH=http://localhost

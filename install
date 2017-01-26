@@ -13,6 +13,8 @@ sudo apt-get update -y
 # https://github.com/fail2ban/fail2ban
 # https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04
 sudo apt-get install curl zsh git nginx couchdb graphicsmagick openssl fail2ban -y
+cp aliases ~/.aliases
+echo "source ~/.aliases" >> ~/.profile
 
 ./install_node
 cd $NGINX_FOLDER && ./setup
