@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "live-server --port=3006"
+    "start": "live-server --port=3007"
   },
   "author": "",
   "license": "AGPL-3.0",
