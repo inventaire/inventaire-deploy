@@ -11,6 +11,7 @@ ExecStart=HOMEFOLDER/.nvm/versions/node/NODEVERSION/bin/coffee INVFOLDER/server.
 WorkingDirectory=INVFOLDER/
 Environment=PATH=HOMEFOLDER/.nvm/versions/node/NODEVERSION/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games
 Environment=NODE_ENV=production
+Environment=FORCE_COLOR=true
 User=USERNAME
 Group=USERNAME
 Restart=always
