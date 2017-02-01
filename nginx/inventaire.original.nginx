@@ -143,10 +143,6 @@ server {
     location / {
         gzip_static on;
         try_files $uri @prerender;
-
-        # time is negative => “Cache-Control: no-cache”
-        # http://nginx.org/en/docs/http/ngx_http_headers_module.html
-        expires -1;
     }
 
     # Dispatching requests between the JS-rendered client (for browsers)
@@ -191,7 +187,10 @@ server {
             add_header X-WebKit-CSP $csp; # Safari <7 and Chrome <25
 
             # index.html should always be fresh out of the server
-            add_header 'Cache-Control' 'max-age=0, no-cache, no-store, must-revalidate';
+            # time is negative => “Cache-Control: no-cache”
+            # http://nginx.org/en/docs/http/ngx_http_headers_module.html
+            # Those headers should be set here and not at "location /" as they would be ignored (cf http://serverfault.com/a/786248)
+            expires -1;
             add_header 'Pragma' 'no-cache';
 
             rewrite .* /public/index.html break;
