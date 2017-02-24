@@ -16,17 +16,16 @@ alias ls="ls --color=auto"
 alias ll="ls -lha"
 alias heaviest="du -sk * | sort -rn| head -n 20"
 
-alias npmi='npm install'
-alias npmip'npm install --production'
-alias npmig='npm install -g'
+alias npmi="echo 'npm install --production' && npm install --production"
+alias npmig="echo 'npm install -g  --production' && npm install -g  --production"
 alias npmug='npm uninstall -g'
 alias npms="npm start"
 alias npmt="npm test"
 alias npmtw="npm run test-watch"
 alias npmu="npm uninstall"
-alias npmis="npm install --save"
-alias npmisd="npm install --save-dev"
-alias npmusd="npm uninstall --save-dev"
+alias npmis="echo 'npm install --save --production' && npm install --save --production"
+alias npmisd="echo 'npm install --save-dev  --production' && npm install --save-dev  --production"
+alias npmusd="echo 'npm uninstall --save-dev  --production' && npm uninstall --save-dev  --production"
 alias npml="npm run lint"
 alias npmb="npm run build"
 alias npmbw="npm run build-watch"
