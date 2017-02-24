@@ -1,9 +1,7 @@
 #!/usr/bin/env zsh
 
 echo "Generating self-signed keys for CouchDB"
-echo "(can't be skiped but you can let them all fields blank)"
-openssl req -x509 -sha256 -nodes -days 1095 -newkey rsa:2048 -keyout couch.key -out couch.crt
-echo "--------- done with self-signed certificated: now back to questions that you MIGHT NOT want to let blank --------"
+openssl req -x509 -sha256 -nodes -days 1095 -newkey rsa:2048 -keyout couch.key -out couch.crt -subj "/C=/ST=/L=/O=/OU=/CN=."
 
 # Customizing the Couchdb to the local needs.
 # Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
