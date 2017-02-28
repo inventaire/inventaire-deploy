@@ -78,8 +78,8 @@ server {
         proxy_intercept_errors  on;
 
         default_type image/jpeg;
-        add_header Pragma "public";
         add_header Cache-Control "public";
+        add_header Cache-Control "immutable";
         expires     1y;
         access_log  off;
         log_not_found off;
@@ -103,8 +103,14 @@ server {
     root  PROJECT_ROOT/inventaire/client;
     location /public/ {
         gzip_static on;
-        expires 1y;
-        add_header Cache-Control "public";
+        # Let resources that can't be cache busted
+        # - such as opensearch.xml or robots.txt -
+        # out of this caching policy
+        if ($uri ~ "^/public/(js|css|fonts|i18n)/" ) {
+            add_header Cache-Control "public";
+            add_header Cache-Control "immutable";
+            expires 1y;
+        }
         add_header 'Access-Control-Allow-Origin' '*' always;
         add_header 'Access-Control-Allow-Methods' 'GET' always;
     }
@@ -191,7 +197,6 @@ server {
             # http://nginx.org/en/docs/http/ngx_http_headers_module.html
             # Those headers should be set here and not at "location /" as they would be ignored (cf http://serverfault.com/a/786248)
             expires -1;
-            add_header 'Pragma' 'no-cache';
 
             rewrite .* /public/index.html break;
         }
