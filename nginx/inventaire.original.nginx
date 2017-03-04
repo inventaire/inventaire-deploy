@@ -110,9 +110,11 @@ server {
             add_header Cache-Control "public";
             add_header Cache-Control "immutable";
             expires 1y;
+            # All headers that aren't in the last block won't be taken in account
+            # thus the need to have CORS headers here too
+            add_header 'Access-Control-Allow-Origin' '*' always;
+            add_header 'Access-Control-Allow-Methods' 'GET' always;
         }
-        add_header 'Access-Control-Allow-Origin' '*' always;
-        add_header 'Access-Control-Allow-Methods' 'GET' always;
     }
 
     # pass the request to the node.js server
