@@ -148,6 +148,14 @@ server {
         expires 1d;
         add_header Cache-Control "public";
     }
+
+    # Prevent exposing git folders such as /public/i18n/.git
+    # For why this rule takes precedence over location /public/
+    # see http://stackoverflow.com/a/34262192/3324977
+    location ~ /\.git {
+        deny all;
+    }
+
     location / {
         gzip_static on;
         try_files $uri @prerender;
