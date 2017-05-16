@@ -117,7 +117,7 @@ server {
         }
     }
 
-    # pass the request to the node.js server
+    # Pass the request to the node.js server
     # with some correct headers for proxy-awareness
     location /api {
         # Let the server decide when CORS headers should be added
@@ -126,7 +126,6 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_set_header X-NginX-Proxy true;
-
         proxy_pass http://127.0.0.1:3006;
         proxy_redirect off;
 
@@ -134,6 +133,19 @@ server {
         # proxy_http_version 1.1;
         # proxy_set_header Upgrade $http_upgrade;
         # proxy_set_header Connection "upgrade";
+    }
+
+    # Let the API server handle JSON requests
+    location ~ ".*\.json" {
+        # Same as /api, couldn't find a proper way to DRY it
+        # The 'include' strategy (http://stackoverflow.com/a/35375548/3324977)
+        # failed as Nginx rejected the proxy directives at this place
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_pass http://127.0.0.1:3006;
+        proxy_redirect off;
     }
 
     location = /favicon.ico {
