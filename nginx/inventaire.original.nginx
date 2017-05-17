@@ -135,8 +135,8 @@ server {
         # proxy_set_header Connection "upgrade";
     }
 
-    # Let the API server handle JSON requests
-    location ~ ".*\.json" {
+    # Let the API server handle all but /public JSON requests
+    location ~ "^/[^p].*\.json" {
         # Same as /api, couldn't find a proper way to DRY it
         # The 'include' strategy (http://stackoverflow.com/a/35375548/3324977)
         # failed as Nginx rejected the proxy directives at this place
