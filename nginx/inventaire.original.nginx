@@ -98,6 +98,11 @@ server {
         }
     }
 
+    # Redirecting IPFS files to the public ipfs.io gateway
+    location /ipfs {
+        return 301 https://ipfs.io$request_uri;
+    }
+
     # following aliases made in order to respect the url structure
     # the server alone would follow: especially, mounting /static on /public
     root  PROJECT_ROOT/inventaire/client;
