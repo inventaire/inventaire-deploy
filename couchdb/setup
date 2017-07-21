@@ -29,7 +29,7 @@ sleep 2
 
 curl -kX PUT https://localhost:6984/_config/admins/$COUCH_USER -d '"'$COUCH_PW'"'
 # uncomment require_valid_user
-sudo sed -i "s/^;require_valid_user/require_valid_user/g" /etc/couchdb/local.ini
+sudo sed -i "s/^;\s*require_valid_user/require_valid_user/g" /etc/couchdb/local.ini
 sudo systemctl restart couchdb
 
 # Databases will then be created by the nodejs server at first startup
