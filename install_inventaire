@@ -4,32 +4,7 @@ cd inventaire
 npm install --production
 npm install add-to-systemd --production
 
-# Setup inventaire.service
-
-HOMEFOLDER=$HOME
-NODEVERSION=$(node -v)
-
-cd $PROJECT_ROOT
-
-# env "PATH=$PATH" allows to access add-to-systemd in sudo mode
-sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
-   --env FORCE_COLOR=true \
-   --env NODE_ENV=production \
-   --env PATH="$PATH" \
-   --user $USERNAME \
-   inventaire "$(which coffee) $(pwd)/server.coffee"
-sudo systemctl start inventaire
-
-# NODE_APP_INSTANCE: use a different local config
-# cf https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
-sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
-   --env FORCE_COLOR=true \
-   --env PATH="$PATH" \
-   --env NODE_ENV=production \
-   --env NODE_APP_INSTANCE=alt \
-   --user $USERNAME \
-   inventaire-alt "$(which coffee) $(pwd)/server.coffee"
-sudo systemctl start inventaire-alt
+./install_inventaire_services
 
 # Make logs persistant
 # https://doc.opensuse.org/documentation/leap/reference/html/book.opensuse.reference/cha.journalctl.html#journalctl.persistent
