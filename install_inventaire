@@ -15,3 +15,6 @@ sudo systemctl restart systemd-journald
 # Firewall setup
 # - make sure SMTP isn't blocked
 #   Scaleway: https://community.online.net/t/solved-smtp-connection-blocked/2262/3
+
+sudo systemctl start inventaire
+sudo systemctl start inventaire-alt

@@ -11,7 +11,6 @@ sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire \
    --env NODE_ENV=production \
    --env PATH="$PATH" \
    --user "$USERNAME" -- "$cmd"
-sudo systemctl start inventaire
 
 # NODE_APP_INSTANCE: use a different local config
 # cf https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
@@ -21,4 +20,3 @@ sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire-alt \
    --env NODE_ENV=production \
    --env NODE_APP_INSTANCE=alt \
    --user "$USERNAME" -- "$cmd"
-sudo systemctl start inventaire-alt
