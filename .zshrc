@@ -29,9 +29,6 @@ LH=http://localhost
 
 source ~/.aliases
 
-export NVM_DIR="/home/ubuntu/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
 export EDITOR=/usr/bin/vim
 export GOPATH=$HOME/go
 export PATH=$PATH:/snap/bin/

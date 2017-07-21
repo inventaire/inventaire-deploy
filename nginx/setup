@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -eu
+
 read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
 # if domain name is an empty string, default to inventaire.io
 [ -z "$DOMAIN_NAME" ] && DOMAIN_NAME='inventaire.io'

@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+set -eu
+
 echo "Generating self-signed keys for CouchDB"
 openssl req -x509 -sha256 -nodes -days 1095 -newkey rsa:2048 -keyout couch.key -out couch.crt -subj "/C=/ST=/L=/O=/OU=/CN=."
 

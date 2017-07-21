@@ -1,3 +1,4 @@
+#!/usr/bin/env sh
 alias diskspace="df -h"
 alias agi="sudo apt-get install"
 alias agud="sudo apt-get update"
@@ -15,6 +16,7 @@ alias cdpp="cd ../.."
 alias ls="ls --color=auto"
 alias ll="ls -lha"
 alias heaviest="du -sk * | sort -rn| head -n 20"
+alias chmox="chmod +x"
 
 alias npmi="echo 'npm install --production' && npm install --production"
 alias npmig="echo 'npm install -g  --production' && npm install -g  --production"
@@ -41,8 +43,11 @@ alias gs="git status"
 alias ungc="git reset --soft HEAD^"
 alias gd="git diff"
 alias gdc="git diff --cached"
-gjump () {
-  git branch -D $1 && git co -b $1
-}
+alias gjump="git checkout -B"
+alias gcop="git checkout -p"
+alias gap="git add --patch"
+alias gslast="git show HEAD"
+
+srm(){ mv $@ /tmp }
 
 export LH=http://localhost
