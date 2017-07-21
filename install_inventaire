@@ -1,36 +1,41 @@
 #!/usr/bin/env sh
 git clone http://github.com/inventaire/inventaire
 cd inventaire
-# /!\ currently fails because the 'inv-dbs-list' module can't be found:
-# it was unpublished from NPM but inventaire/inventaire master branch is still not aware of it
-# Temporary workaround: checkout 'dev' branch in both inventaire/inventaire and inventaire/inventaire-client
 npm install --production
+npm install add-to-systemd --production
 
-# Setup inventaire.service
+# Setup inventaire.service
 
-# Update the NVM executables path
-INVFOLDER=$(pwd)
 HOMEFOLDER=$HOME
 NODEVERSION=$(node -v)
 
 cd $PROJECT_ROOT
 
-# Customizing the Nginx config to the local needs.
-# Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
-# cf http://stackoverflow.com/a/9366940/3324977
-cat ./systemd/inventaire.service.original |
-  sed "s@INVFOLDER@${INVFOLDER}@g" |
-  sed "s@HOMEFOLDER@${HOMEFOLDER}@g" |
-  sed "s@USERNAME@$USERNAME@g" |
-  sed "s@NODEVERSION@${NODEVERSION}@g" > ./systemd/inventaire.service
+# env "PATH=$PATH" alows to access add-to-systemd in sudo mode
+sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
+   --env FORCE_COLOR=true \
+   --env NODE_ENV=production \
+   --env PATH="$PATH" \
+   --user $USERNAME \
+   inventaire "$(which coffee) $(pwd)/server.coffee"
+sudo systemctl start inventaire
+
+# NODE_APP_INSTANCE: use a different local config
+# cf https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
+sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
+   --env FORCE_COLOR=true \
+   --env PATH="$PATH" \
+   --env NODE_ENV=production \
+   --env NODE_APP_INSTANCE=alt \
+   --user $USERNAME \
+   inventaire-alt "$(which coffee) $(pwd)/server.coffee"
+sudo systemctl start inventaire-alt
 
 # Make logs persistant
-# https://doc.opensuse.org/documentation/leap/reference/html/book.opensuse.reference/cha.journalctl.html#journalctl.persistent
+# https://doc.opensuse.org/documentation/leap/reference/html/book.opensuse.reference/cha.journalctl.html#journalctl.persistent
 sudo sed -i 's/#Storage=auto/Storage=persistent/' /etc/systemd/journald.conf
 sudo systemctl restart systemd-journald
 
-# Copy instead of simply linking as some system fail to find the symbolic link target
-sudo cp ./systemd/inventaire.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable inventaire.service
-sudo systemctl start inventaire.service
+# Firewall setup
+# - make sure SMTP isn't blocked
+#   Scaleway: https://community.online.net/t/solved-smtp-connection-blocked/2262/3
