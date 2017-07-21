@@ -11,7 +11,7 @@ NODEVERSION=$(node -v)
 
 cd $PROJECT_ROOT
 
-# env "PATH=$PATH" alows to access add-to-systemd in sudo mode
+# env "PATH=$PATH" allows to access add-to-systemd in sudo mode
 sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
    --env FORCE_COLOR=true \
    --env NODE_ENV=production \
