@@ -6,7 +6,7 @@ sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
    --env NODE_ENV=production \
    --env PATH="$PATH" \
    --user $USERNAME \
-   inventaire "$(which coffee) $(pwd)/server.coffee"
+   inventaire -- "$(which coffee) $(pwd)/server.coffee"
 sudo systemctl start inventaire
 
 # NODE_APP_INSTANCE: use a different local config
@@ -17,5 +17,5 @@ sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
    --env NODE_ENV=production \
    --env NODE_APP_INSTANCE=alt \
    --user $USERNAME \
-   inventaire-alt "$(which coffee) $(pwd)/server.coffee"
+   inventaire-alt -- "$(which coffee) $(pwd)/server.coffee"
 sudo systemctl start inventaire-alt
