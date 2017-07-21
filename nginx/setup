@@ -7,6 +7,9 @@ read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
 read -p "Enter the url of your Prerender (https://github.com/inventaire/prerender) instance (defaults to http://localhost:3000) " PRERENDER_INSTANCE
 [ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='http://localhost:3000'
 
+read -p "Enter the IP of your Prerender instance (defaults to 0.0.0.0) " PRERENDER_IP
+[ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='0.0.0.0'
+
 echo 'PROJECT_ROOT' $PROJECT_ROOT
 echo 'PRERENDER_INSTANCE' $PRERENDER_INSTANCE
 echo 'DOMAIN_NAME' $DOMAIN_NAME
@@ -17,7 +20,8 @@ echo 'DOMAIN_NAME' $DOMAIN_NAME
 cat inventaire.original.nginx |
  sed "s@PROJECT_ROOT@$PROJECT_ROOT@g" |
  sed "s@DOMAIN_NAME@$DOMAIN_NAME@g" |
- sed "s@PRERENDER_INSTANCE@$PRERENDER_INSTANCE@g" > inventaire.custom.nginx
+ sed "s@PRERENDER_INSTANCE@$PRERENDER_INSTANCE@g" |
+ sed "s@PRERENDER_IP@$PRERENDER_IP@g" > inventaire.custom.nginx
 
 sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
 mkdir -p /tmp/images /tmp/nginx/resize
