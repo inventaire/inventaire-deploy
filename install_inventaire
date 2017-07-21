@@ -1,4 +1,5 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
+
 git clone http://github.com/inventaire/inventaire
 cd inventaire
 npm install --production

@@ -1,21 +1,24 @@
-#!/usr/bin/env sh
+#!/usr/bin/env zsh
+
+set -eu
+
+cmd="$(which coffee) $(pwd)/server.coffee"
+echo "cmd: $cmd"
 
 # env "PATH=$PATH" allows to access add-to-systemd in sudo mode
-sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
+sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire \
    --env FORCE_COLOR=true \
    --env NODE_ENV=production \
    --env PATH="$PATH" \
-   --user $USERNAME \
-   inventaire -- "$(which coffee) $(pwd)/server.coffee"
+   --user "$USERNAME" -- "$cmd"
 sudo systemctl start inventaire
 
 # NODE_APP_INSTANCE: use a different local config
 # cf https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
-sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd \
+sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire-alt \
    --env FORCE_COLOR=true \
    --env PATH="$PATH" \
    --env NODE_ENV=production \
    --env NODE_APP_INSTANCE=alt \
-   --user $USERNAME \
-   inventaire-alt -- "$(which coffee) $(pwd)/server.coffee"
+   --user "$USERNAME" -- "$cmd"
 sudo systemctl start inventaire-alt
