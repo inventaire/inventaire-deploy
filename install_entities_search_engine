@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+
+# Load entities and start the service to keep entities updated
+git clone https://github.com/inventaire/wikidata-subset-search-engine -b integrateInvEntities entities-search-engine
+cd entities-search-engine
+# Customizing configuration
+cp config/prod.local.coffee config/local.coffee
+npm install --production
+
+# Make sure the inventaire server from which entities images will be requested is online
+inventaire_host=$(node -p "require('config').inventaire.host")
+curl -s "$inventaire_host" > /dev/null && echo "inventaire instance found" || \
+  # Using curly brackets to group those commands without starting a subshell from which exiting would be useless
+  # cf https://ss64.com/bash/syntax-brackets.html
+  { echo "inventaire instance not found at ${inventaire_host}" && exit 1; }
+
+# init indexes
+curl -XPUT http://localhost:9200/wikidata
+curl -XPUT http://localhost:9200/entities-prod
+
+npm run add-to-systemd
+sudo systemctl start wsse
+
+# Load humans from the dump as they can't be imported from SPARQL queries (see 'update-and-import-all' later)
+curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz | gzip -d | ./node_modules/.bin/wikidata-filter --claim P31:Q5 --omit type,sitelinks | ./bin/import_to_elasticsearch wikidata humans
+
+npm run update-and-import-all
+
+# Import inventaire entities
+# Using the same name for the CouchDB database and the ElasticSearch index
+# expectets the env variable COUCHDB_AUTH_HOST to be set: COUCHDB_AUTH_HOST=http://username:password@localhost:5984
+ENTITIES_DB_NAME=entities-prod
+couch-view-by-keys $COUCHDB_AUTH_HOST/$ENTITIES_DB_NAME/_design/entities/_view/byClaim "['wdt:P31', 'wd:Q5']" | ./bin/import_to_elasticsearch $ENTITIES_DB_NAME humans
+couch-view-by-keys $COUCHDB_AUTH_HOST/$ENTITIES_DB_NAME/_design/entities/_view/byClaim "['wdt:P31', 'wd:Q571']" | ./bin/import_to_elasticsearch $ENTITIES_DB_NAME works
+couch-view-by-keys $COUCHDB_AUTH_HOST/$ENTITIES_DB_NAME/_design/entities/_view/byClaim "['wdt:P31', 'wd:Q277759']" | ./bin/import_to_elasticsearch $ENTITIES_DB_NAME series
