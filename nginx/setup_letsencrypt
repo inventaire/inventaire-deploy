@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# Source: https://certbot.eff.org/all-instructions/#ubuntu-16-04-xenial-nginx
+sudo add-apt-repository ppa:certbot/certbot -y
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
+
+sudo certbot --nginx
+# Choices:
+# 1 => Pick only 'inventaire.io', not 'www.inventaire.io'
+# 2 => redirect
+
+# Automatic cert renewal:
+# a cron should have been set at /etc/cron.d/certbot
+
+# Add a hook to restart nginx
+# source: https://community.letsencrypt.org/t/certbot-nginx-automatic-renewal/46869
+echo 'sudo nginx -s reload' | sudo tee /etc/letsencrypt/renewal-hooks/deploy/nginx_reload
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/nginx_reload

@@ -29,15 +29,6 @@ sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
 mkdir -p /tmp/images /tmp/nginx/resize
 sudo chmod 666 /tmp/images /tmp/nginx/resize
 
-# TODO: automate SSL setup with Let's Encrypt
-echo "Here is where to place your SSL keys:"
-echo "
-$PROJECT_ROOT/nginx/bundle.crt
-$PROJECT_ROOT/nginx/inventaire.key
-"
-
-read -p "Press Enter once those files are in place... (if you choose to do it later, simply run 'sudo nginx -s reload')" key
-
 # generate dhparam.pem file
 openssl dhparam -out $PROJECT_ROOT/nginx/dhparam.pem 2048
 
@@ -48,6 +39,8 @@ sudo cp $PROJECT_ROOT/nginx/nginx.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable nginx.service
 sudo systemctl start nginx.service
+
+./setup_letsencrypt
 
 # reload nginx configuration
 sudo nginx -s reload

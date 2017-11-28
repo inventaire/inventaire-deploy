@@ -26,8 +26,9 @@ server {
 server {
     listen              443 ssl http2;
     server_name         DOMAIN_NAME www.DOMAIN_NAME;
-    ssl_certificate     PROJECT_ROOT/nginx/bundle.crt;
-    ssl_certificate_key PROJECT_ROOT/nginx/inventaire.key;
+
+    # 'ssl_certificate' and 'ssl_certificate_key' will be added
+    # by LetsEncrypt certbot
 
     ## source: https://mozilla.github.io/server-side-tls/ssl-config-generator/
     ssl_prefer_server_ciphers on;
