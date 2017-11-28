@@ -42,7 +42,10 @@ server {
     ssl_stapling_verify on;
 
     # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
-    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Content-Type-Options 'nosniff' always;
+
+    # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
+    add_header Referrer-Policy 'no-referrer-when-downgrade' always;
 
     client_max_body_size 5M;
 
@@ -132,6 +135,9 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_set_header X-NginX-Proxy true;
+        # Increasing timeout to let the time to long request (mostly admin requests) to proceed
+        # http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout
+        proxy_read_timeout 600;
         proxy_redirect off;
 
         # Redirect Prerender API requests to their the alt server
@@ -195,7 +201,7 @@ server {
         #proxy_set_header X-Prerender-Token YOUR_TOKEN;
 
         set $prerender 0;
-        if ($http_user_agent ~* "bot|index|spider|crawl|facebookexternalhit|embedly|quora link preview|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp") {
+        if ($http_user_agent ~* "bot|index|spider|crawl|facebookexternalhit|embedly|quora link preview|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp|Twitterbot") {
             set $prerender 1;
         }
         if ($args ~ "_escaped_fragment_") {
@@ -222,7 +228,7 @@ server {
             add_header Strict-Transport-Security "max-age=31536000;" always;
 
             # Keep in sync with server/middlewares/security.coffee@inventaire/inventaire
-            set $csp "default-src 'self'; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://commons.wikimedia.org https://api.tiles.mapbox.com https://piwik.allmende.io data:; report-uri /api/reports?action=csp-report;";
+            set $csp "default-src 'self' www.wikidata.org; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://commons.wikimedia.org https://api.tiles.mapbox.com https://piwik.allmende.io data:; report-uri /api/reports?action=csp-report;";
             add_header Content-Security-Policy $csp; # Standard
             add_header X-Content-Security-Policy $csp; # Firefox <23 & IE 10, 11
             add_header X-WebKit-CSP $csp; # Safari <7 and Chrome <25
