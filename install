@@ -10,7 +10,7 @@ sudo add-apt-repository ppa:couchdb/stable -y
 sudo apt-get update -y
 
 # - software-properties-common: installs add-apt-repository
-sudo apt-get install curl zsh git nginx couchdb graphicsmagick openssl software-properties-common -y
+sudo apt-get install curl zsh git nginx couchdb graphicsmagick openssl inotify-tools software-properties-common -y
 
 # Optionals:
 sudo apt-get install fail2ban build-essential
