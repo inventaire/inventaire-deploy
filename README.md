@@ -1,6 +1,6 @@
 # inventaire-deploy
 
-Tools and scripts to install self-hosted [inventaire](https://github.com/inventaire/inventaire) instance
+Tools and scripts to install [inventaire](https://github.com/inventaire/inventaire) in production
 
 ![deploy](https://qzprod.files.wordpress.com/2014/06/matrix-computers.jpg?quality=80&strip=all&w=500)
 
@@ -36,7 +36,6 @@ By default, this setup uses the same services as [inventaire.io](https://inventa
 
 ### Wikidata Subset Search Engine
 * repo: [inventaire/wikidata-subset-search-engine](https://github.com/inventaire/wikidata-subset-search-engine)
-* live: [https://data.inventaire.io/](https://data.inventaire.io/)
 * setup: integration is very much in progress and might change a few times in the coming weeks after this writing so the most future-proof advice there is to make a global search in the [client's code](http://github.com/inventaire/inventaire-client) and to replace every instance of `data.inventaire.io` by your own url
 
 ## Stack Map
