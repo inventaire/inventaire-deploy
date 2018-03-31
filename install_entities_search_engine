@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Load entities and start the service to keep entities updated
-git clone https://github.com/inventaire/wikidata-subset-search-engine -b integrateInvEntities entities-search-engine
+git clone https://github.com/inventaire/entities-search-engine
 cd entities-search-engine
 # Customizing configuration
 cp config/prod.local.coffee config/local.coffee
@@ -14,7 +14,7 @@ curl -s "$inventaire_host" > /dev/null && echo "inventaire instance found" || \
   # cf https://ss64.com/bash/syntax-brackets.html
   { echo "inventaire instance not found at ${inventaire_host}" && exit 1; }
 
-# init indexes
+# create indexes
 curl -XPUT http://localhost:9200/wikidata
 curl -XPUT http://localhost:9200/entities-prod
 

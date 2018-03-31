@@ -28,15 +28,8 @@ Want to install it in a different environment? Request a new (orphan) branch and
 ## Other services
 
 By default, this setup uses the same services as [inventaire.io](https://inventaire.io), but you can start your own instance of those too:
-
-### Prerender
-* repo: [inventaire/prerender](https://github.com/inventaire/prerender)
-* live: [http://prerender.inventaire.io:3000](http://prerender.inventaire.io:3000) (Only responding to whitelisted ips)
-* setup: once you installed your instance, run the installation and pass its full url when requested, or, if you already run the `install` script, you can directly replace `http://prerender.inventaire.io:3000` by your instance url in `/etc/nginx/sites-available/default`
-
-### Wikidata Subset Search Engine
-* repo: [inventaire/wikidata-subset-search-engine](https://github.com/inventaire/wikidata-subset-search-engine)
-* setup: integration is very much in progress and might change a few times in the coming weeks after this writing so the most future-proof advice there is to make a global search in the [client's code](http://github.com/inventaire/inventaire-client) and to replace every instance of `data.inventaire.io` by your own url
+* [Prerender](https://github.com/inventaire/prerender)
+* [Entities Search Engine](https://github.com/inventaire/entities-search-engine)
 
 ## Stack Map
 [![stack](https://raw.githubusercontent.com/inventaire/stack/master/snapshots/stack-from-deploy.png)](https://inventaire.github.io/stack/)
