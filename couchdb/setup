@@ -15,6 +15,13 @@ sudo chown couchdb:couchdb couch.crt couch.key local.custom.ini
 sudo chmod 600 couch.crt couch.key local.custom.ini
 sudo cp local.custom.ini /etc/couchdb/local.ini
 
+# See https://wiki.apache.org/couchdb/Performance#PAM_and_ulimit
+echo '
+#<domain>    <type>    <item>    <value>
+couchdb      hard      nofile    4096
+couchdb      soft      nofile    4096
+' | sudo tee /etc/security/limits.d/100-couchdb.conf
+
 read "COUCH_USER?Enter a CouchDB admin name (defaults to $USERNAME) "
 [ -z "$COUCH_USER" ] && COUCH_USER=$USERNAME
 
