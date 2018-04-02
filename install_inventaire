@@ -10,6 +10,10 @@ npm install add-to-systemd --production
 # Make logs persistant
 # https://doc.opensuse.org/documentation/leap/reference/html/book.opensuse.reference/cha.journalctl.html#journalctl.persistent
 sudo sed -i 's/#Storage=auto/Storage=persistent/' /etc/systemd/journald.conf
+# Increasing from 15% to 30%
+sudo sed -i 's/#SystemMaxUse=/SystemMaxUse=30%/' /etc/systemd/journald.conf
+# But make sure it never gets us below the 5G of available disk threshold
+sudo sed -i 's/#SystemKeepFree=/SystemKeepFree=5G/' /etc/systemd/journald.conf
 sudo systemctl restart systemd-journald
 
 # Firewall setup
