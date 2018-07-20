@@ -22,7 +22,10 @@ npm run add-to-systemd
 sudo systemctl start entities-search-engine
 
 # Load humans from the dump as they can't be imported from SPARQL queries (see 'update-and-import-all' later)
-curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz | gzip -d | ./node_modules/.bin/wikidata-filter --claim P31:Q5 --omit type,sitelinks | ./bin/import_to_elasticsearch wikidata humans
+# This is the fast(er) version but not with the freshest data, using a pre-filtered Wikidata dump, to be used to setup a development environment
+curl -s https://dumps.inventaire.io/wd/humans.ndjson.gz | gzip -d | ./bin/import_to_elasticsearch wikidata humans
+# A (very) slow but fresher way to do it:
+# curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz | gzip -d | ./node_modules/.bin/wikidata-filter --claim P31:Q5 --omit type,sitelinks | ./bin/import_to_elasticsearch wikidata humans
 
 npm run update-and-import-all
 
