@@ -19,7 +19,7 @@ curl -XPUT http://localhost:9200/wikidata
 curl -XPUT http://localhost:9200/entities-prod
 
 npm run add-to-systemd
-sudo systemctl start wsse
+sudo systemctl start entities-search-engine
 
 # Load humans from the dump as they can't be imported from SPARQL queries (see 'update-and-import-all' later)
 curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz | gzip -d | ./node_modules/.bin/wikidata-filter --claim P31:Q5 --omit type,sitelinks | ./bin/import_to_elasticsearch wikidata humans
