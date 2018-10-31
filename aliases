@@ -39,7 +39,15 @@ alias npmus="npm uninstall --save"
 alias gl="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
 alias ga="git add"
 alias gr="git reset"
-alias gs="git status"
+gs () {
+	if [ -z "$1" ]
+	then
+		git status && git stash list
+	else
+		git show $1
+	fi
+}
+
 alias ungc="git reset --soft HEAD^"
 alias gd="git diff"
 alias gdc="git diff --cached"
@@ -56,3 +64,5 @@ srm(){ mv $@ /tmp }
 
 export LH=http://localhost
 curljson () { /usr/bin/curl -s -H "Content-Type: application/json" -H 'Accept: application/json' $@ }
+
+alias filepath="readlink -f"
