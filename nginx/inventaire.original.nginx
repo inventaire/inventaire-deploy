@@ -68,20 +68,21 @@ server {
     # https://github.com/fredpalmer/dimwit/blob/develop/nginx.conf
     # http://www.flipflops.org/2015/03/17/resize-images-fly-nginx-try_files/
 
-    # urls look like /img/300x1200/8185d4e039f52b4faa06a1c277133e9a8232551b.jpg
+    # URLs look like /img/users/300x1200/8185d4e039f52b4faa06a1c277133e9a8232551b
     # for locally hosted images
-    # or /img/300x1200/630022006?href=http%3A%2F%2Fescaped.url
+    # or /img/remote/300x1200/630022006?href=http%3A%2F%2Fescaped.url
     # for remote images, with 630022006 being the inv-utils.hashCode of the passed href
 
-    # also catching /img/8185d4e039f52b4faa06a1c277133e9a8232551b.jpg urls
+    # also catching /img/users/8185d4e039f52b4faa06a1c277133e9a8232551b URLs
     # but always failing to find the cached version and passing to the proxy
     # in this case $demins and $image_path will be undefined, which will cause an error of this kind:
     # *2116325 rename() "/tmp/images/0000016413" to "/tmp/nginx/resize//" failed (20: Not a directory) while reading upstream, client: <client-ip>, server: , request: "GET /img/f3c063914d81996e3d262201d1e71c5e38212948.jpg HTTP/1.1", upstream: "http://127.0.0.1:3006/img/f3c063914d81996e3d262201d1e71c5e38212948.jpg", host: "DOMAINNAME"
     location /img {
-        if ($uri ~* "^/img/(\d+)x(\d+)/(.*)" ) {
-            set $width  $1;
-            set $height $2;
-            set $image_path $3;
+        if ($uri ~* "^/img/(users|entities|remote)/(\d+)x(\d+)/(.*)" ) {
+            set $container  $1;
+            set $width  $2;
+            set $height $3;
+            set $image_path $4;
             set $demins "${width}x${height}";
         }
         proxy_intercept_errors  on;
@@ -105,11 +106,6 @@ server {
             proxy_pass http://inventaire;
             break;
         }
-    }
-
-    # Redirecting IPFS files to the public ipfs.io gateway
-    location /ipfs {
-        return 301 https://ipfs.io$request_uri;
     }
 
     # following aliases made in order to respect the url structure
