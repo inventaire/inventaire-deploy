@@ -75,6 +75,7 @@ server {
 
     location ~ ^/img/(users|entities|remote|assets)/(\d+)x(\d+)/(.*) {
        root /tmp/nginx/resize;
+       default_type "image/jpeg";
        add_header Cache-Control "immutable";
        add_header X-File-Cache "hit";
        try_files $uri @invimg;
@@ -97,6 +98,7 @@ server {
     }
 
     location @invimg {
+      default_type "image/jpeg";
       add_header Cache-Control "immutable";
       add_header X-File-Cache "miss";
       proxy_temp_path      /tmp/nginx/tmp;
