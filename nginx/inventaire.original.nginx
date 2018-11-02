@@ -110,14 +110,15 @@ server {
     # the server alone would follow: especially, mounting /static on /public
     root  PROJECT_ROOT/inventaire/client;
     location /public/ {
+        limit_except GET {
+            deny  all;
+        }
         gzip_static on;
         # Let resources that can't be cache busted
         # - such as opensearch.xml or robots.txt -
         # out of this caching policy
         if ($uri ~ "^/public/(js|css|fonts|i18n)/" ) {
-            add_header Cache-Control "public";
             add_header Cache-Control "immutable";
-            expires 1y;
             # All headers that aren't in the last block won't be taken in account
             # thus the need to have CORS headers here too
             add_header 'Access-Control-Allow-Origin' '*' always;
@@ -155,6 +156,9 @@ server {
 
     # Let the API server handle all but /public JSON requests
     location ~ "^/[^p].*\.json" {
+        limit_except GET {
+            deny  all;
+        }
         # Same as /api, couldn't find a proper way to DRY it
         # The 'include' strategy (http://stackoverflow.com/a/35375548/3324977)
         # failed as Nginx rejected the proxy directives at this place
@@ -214,7 +218,6 @@ server {
         }
 
         if ($prerender = 1) {
-
             #setting prerender as a variable forces DNS resolution since nginx caches IPs and doesnt play well with load balancing
             # set $prerender "92.222.76.42:3000";
             rewrite .* /$scheme://$host$request_uri? break;
