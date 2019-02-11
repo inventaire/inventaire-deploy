@@ -37,6 +37,7 @@ alias npmw="npm run watch"
 alias npmus="npm uninstall --save"
 
 alias gl="git log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all"
+alias glp="git log --patch"
 alias ga="git add"
 alias gr="git reset"
 gs () {
@@ -48,13 +49,37 @@ gs () {
 	fi
 }
 
+gss(){
+  [[ -z "$1" ]] && 1=0
+  git show -p "stash@{${1}}"
+}
+
+gsa(){
+  [[ -z "$1" ]] && 1=0
+  git stash apply "stash@{${1}}"
+}
+
+gsd(){
+  [[ -z "$1" ]] && 1=0
+  git stash drop "stash@{${1}}"
+}
+
+gsp(){
+  [[ -z "$1" ]] && 1=0
+  gsa "$1" && gsd "$1"
+}
+
 alias ungc="git reset --soft HEAD^"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias gco="git checkout"
 alias gj="git checkout -B"
-alias gjump="gj"
+gjo () {
+  git checkout origin/$1 && git checkout -B $1
+}
+alias gjom="gjo master"
 alias gf="git fetch"
+alias gfo="git fetch origin"
 alias gfom="git fetch origin master"
 alias gcop="git checkout -p"
 alias gap="git add --patch"
@@ -66,3 +91,20 @@ export LH=http://localhost
 curljson () { /usr/bin/curl -s -H "Content-Type: application/json" -H 'Accept: application/json' $@ }
 
 alias filepath="readlink -f"
+
+find_container(){
+  docker ps | grep "$@" | awk '{print $1}'
+}
+
+alias d=docker
+dexec(){
+  docker exec -it $( find_container $2 ) $1
+  # docker exec -it $2 $1
+}
+alias dbash="dexec /bin/bash"
+alias dsh="dexec /bin/sh"
+alias dzsh="dexec /bin/zsh"
+alias dk="docker kill"
+dka(){ find_container $@ | xargs docker kill }
+dlogs(){ find_container $@ | xargs docker logs }
+alias dps="docker ps"
