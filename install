@@ -23,6 +23,14 @@ sudo apt-get install fail2ban build-essential
 cp aliases ~/.aliases
 echo "source ~/.aliases" >> ~/.profile
 
+# Increase the limit of opened files to lower risks of LevelDB throwing "IO error: Too many open files"
+# https://singztechmusings.wordpress.com/2011/07/11/ulimit-how-to-permanently-set-kernel-limits-in-linux/
+# https://stackoverflow.com/questions/21591535/is-there-any-downside-to-setting-ulimit-really-high
+echo "
+* soft nofile 16384
+* hard nofile 16384
+" | sudo tee -a /etc/security/limits.conf
+
 ./install_node
 cd $NGINX_FOLDER && ./setup
 cd $COUCHDB_FOLDER && ./setup
