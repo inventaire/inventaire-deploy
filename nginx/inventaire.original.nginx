@@ -89,7 +89,7 @@ server {
     # it does put the resized images in /tmp/nginx/resize, so using a try_files
     # directive instead
 
-    location ~ ^/img/(users|entities|remote|assets)/(\d+)x(\d+)/(.*) {
+    location ~ ^/img/(users|entities|remote|assets)/(.*) {
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header Cache-Control "immutable";
@@ -102,15 +102,6 @@ server {
 
     location ~ ^/img/(\d+)x(\d+)/(.*) {
         return 404;
-    }
-
-    # Serving full definition images
-    location /img {
-      add_header Cache-Control "immutable";
-      proxy_pass http://inventaire;
-      limit_except GET {
-          deny  all;
-      }
     }
 
     location @invimg {
