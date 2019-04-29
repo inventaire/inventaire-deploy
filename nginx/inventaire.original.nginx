@@ -202,6 +202,9 @@ server {
     location / {
         gzip_static on;
         try_files $uri @prerender;
+        limit_except GET {
+           deny all;
+       }
     }
 
     # Dispatching requests between the JS-rendered client (for browsers)
