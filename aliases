@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-alias diskspace="df -h"
+
 alias agi="sudo apt-get -y install"
 alias agud="sudo apt-get -y update"
 alias agug="sudo apt-get -y upgrade"
@@ -108,3 +108,20 @@ alias dk="docker kill"
 dka(){ find_container $@ | xargs docker kill }
 dlogs(){ find_container $@ | xargs docker logs }
 alias dps="docker ps"
+
+echo_blue(){ echo -e "\e[0;34m$@\e[0;0m" }
+echo_grey(){ echo -e "\e[0;30m$@\e[0;0m" }
+
+# Source: https://www.shellhacks.com/disk-speed-test-read-write-hdd-ssd-perfomance-linux/
+disk_benchmark(){
+  echo_blue "WRITE speed"
+  sync; dd if=/dev/zero of=tempfile bs=1M count=1024; sync
+  echo_blue "Clear disk cache"
+  sudo /sbin/sysctl -w vm.drop_caches=3 > /dev/null
+  echo_blue "READ speed"
+  dd if=tempfile of=/dev/null bs=1M count=1024
+  rm tempfile
+  echo_grey "(use hdparm to test cache speed. Ex: sudo hdparm -Tt /dev/sda)"
+}
+
+alias disk_space="df -h"
