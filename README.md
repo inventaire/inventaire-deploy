@@ -1,8 +1,8 @@
 # inventaire-deploy
 
-Tools and scripts to install [inventaire](https://github.com/inventaire/inventaire) in production
+Tools and scripts to document the installation of [inventaire](https://github.com/inventaire/inventaire) in production
 
-![deploy](https://qzprod.files.wordpress.com/2014/06/matrix-computers.jpg?quality=80&strip=all&w=500)
+:warning: you are free to do anything the [AGPL-3.0 license](https://en.wikipedia.org/wiki/GNU_Affero_General_Public_License) allows you to, but this documentation is not an invitation to self-host your own instance (Inventaire is not ready for [decentralization](https://github.com/inventaire/inventaire/issues/187))
 
 ## Installation
 ### Ubuntu
