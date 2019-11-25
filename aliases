@@ -95,6 +95,7 @@ find_container(){
 }
 
 alias d=docker
+alias dc=docker-compose
 dexec(){
   docker exec -it $( find_container $2 ) $1
   # docker exec -it $2 $1
@@ -125,3 +126,12 @@ disk_benchmark(){
 alias disk_space="df -h"
 alias firewall_rules="sudo iptables -L"
 alias ufws="sudo ufw status verbose"
+
+find_container_using_volume(){
+  volume_id=$1
+  docker ps -a --filter volume=$volume_id
+}
+
+alias ds="docker stats"
+alias di="docker image"
+alias dis="docker images"
