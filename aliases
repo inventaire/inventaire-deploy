@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-
 alias agi="sudo apt-get -y install"
 alias agud="sudo apt-get -y update"
 alias agug="sudo apt-get -y upgrade"
@@ -125,3 +123,5 @@ disk_benchmark(){
 }
 
 alias disk_space="df -h"
+alias firewall_rules="sudo iptables -L"
+alias ufws="sudo ufw status verbose"
