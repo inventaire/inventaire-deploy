@@ -12,7 +12,7 @@ alias wh=which
 alias cdp="cd .."
 alias cdpp="cd ../.."
 alias ls="ls --color=auto"
-alias ll="ls -lha"
+alias l="ls -lha"
 alias heaviest="du -sk * | sort -rn| head -n 20"
 alias chmox="chmod +x"
 
