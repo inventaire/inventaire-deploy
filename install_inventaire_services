@@ -2,7 +2,7 @@
 
 set -eu
 
-cmd="$(which coffee) $(pwd)/server.coffee"
+cmd="$(which node) $(pwd)/server/server.js"
 echo "cmd: $cmd"
 
 # env "PATH=$PATH" allows to access add-to-systemd in sudo mode
