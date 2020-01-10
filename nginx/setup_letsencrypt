@@ -3,7 +3,7 @@
 # Source: https://certbot.eff.org/all-instructions/#ubuntu-16-04-xenial-nginx
 sudo add-apt-repository ppa:certbot/certbot -y
 sudo apt-get update
-sudo apt-get install python-certbot-nginx
+sudo apt-get install python-certbot-nginx -y
 
 sudo certbot --nginx
 # Choices:
