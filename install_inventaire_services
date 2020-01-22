@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 set -eu
 
@@ -13,10 +13,13 @@ sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire \
    --user "$USERNAME" -- "$cmd"
 
 # NODE_APP_INSTANCE: use a different local config
-# cf https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
+# see https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
+# A MemoryMax could aslo be set manually on the unit (ex: MemoryMax=20%)
+# see https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html
 sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire-alt \
    --env FORCE_COLOR=true \
    --env PATH="$PATH" \
    --env NODE_ENV=production \
    --env NODE_APP_INSTANCE=alt \
+   --nice 10 \
    --user "$USERNAME" -- "$cmd"
