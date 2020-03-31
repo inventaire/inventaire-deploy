@@ -235,7 +235,7 @@ server {
         #proxy_set_header X-Prerender-Token YOUR_TOKEN;
 
         set $prerender 0;
-        if ($http_user_agent ~* "bot|index|spider|crawl|facebookexternalhit|embedly|quora link preview|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp|Twitterbot") {
+        if ($http_user_agent ~* "bot|index|spider|crawl|facebookexternalhit|embedly|quora link preview|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp|Discourse") {
             set $prerender 1;
         }
         if ($args ~ "_escaped_fragment_") {
