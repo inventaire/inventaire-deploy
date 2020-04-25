@@ -9,3 +9,11 @@ read -p "Enter the ip from the machine where your backup CouchDB is running (let
 [ ! -z "$BACKUPIP" ] && sudo ufw allow from $BACKUPIP to any port 6984
 
 sudo ufw enable
+
+[[ -f /etc/default/docker ]] && {
+  echo '
+  # Prevent Docker modifying iptables
+  # See https://www.techrepublic.com/article/how-to-fix-the-docker-and-ufw-security-flaw/
+  DOCKER_OPTS="--iptables=false"
+  ' | sudo tee -a /etc/default/docker
+}
