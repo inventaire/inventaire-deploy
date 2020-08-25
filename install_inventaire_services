@@ -10,16 +10,18 @@ sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire \
    --env FORCE_COLOR=true \
    --env NODE_ENV=production \
    --env PATH="$PATH" \
+   --option LimitNOFILE=65536 \
    --user "$USERNAME" -- "$cmd"
 
 # NODE_APP_INSTANCE: use a different local config
 # see https://github.com/lorenwest/node-config/wiki/Multiple-Node-Instances
-# A MemoryMax could aslo be set manually on the unit (ex: MemoryMax=20%)
+# A MemoryMax could also be set manually on the unit (ex: MemoryMax=20%)
 # see https://www.freedesktop.org/software/systemd/man/systemd.resource-control.html
 sudo env "PATH=$PATH" ./node_modules/.bin/add-to-systemd inventaire-alt \
    --env FORCE_COLOR=true \
    --env PATH="$PATH" \
    --env NODE_ENV=production \
    --env NODE_APP_INSTANCE=alt \
+   --option LimitNOFILE=65536 \
    --nice 10 \
    --user "$USERNAME" -- "$cmd"
