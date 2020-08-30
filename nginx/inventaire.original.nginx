@@ -167,6 +167,7 @@ server {
         proxy_read_timeout 3600;
 
         proxy_redirect off;
+        proxy_http_version 1.1;
 
         # Redirect Prerender API requests to their the alt server
         if ($remote_addr = PRERENDER_IP) {
@@ -194,6 +195,7 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_set_header X-NginX-Proxy true;
+        proxy_http_version 1.1;
         proxy_pass http://inventaire;
         proxy_redirect off;
     }
@@ -252,6 +254,7 @@ server {
             #setting prerender as a variable forces DNS resolution since nginx caches IPs and doesnt play well with load balancing
             # set $prerender "92.222.76.42:3000";
             rewrite .* /$scheme://$host$request_uri? break;
+            proxy_http_version 1.1;
             proxy_pass PRERENDER_INSTANCE;
         }
         if ($prerender = 0) {
