@@ -34,7 +34,15 @@ sudo apt-get install oracle-java8-installer elasticsearch -y
 # https://github.com/elastic/puppet-elasticsearch/pull/870
 # https://www.digitalocean.com/community/tutorials/understanding-systemd-units-and-unit-files
 sudo mkdir -p /etc/systemd/system/elasticsearch.service.d
-echo "[Service]\nRestart=on-failure\n" | sudo tee /etc/systemd/system/elasticsearch.service.d/override.conf
+echo '
+[Unit]
+StartLimitInterval=200
+StartLimitBurst=5
+
+[Service]
+Restart=always
+RestartSec=3
+' | sudo tee /etc/systemd/system/elasticsearch.service.d/override.conf
 
 # Start ElasticSearch at startup
 sudo systemctl daemon-reload
