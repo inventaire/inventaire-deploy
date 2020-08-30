@@ -10,6 +10,8 @@ read -p "Enter the ip from the machine where your backup CouchDB is running (let
 
 sudo ufw enable
 
+# This actually seem to not be enough so, while waiting for a more effective solution
+# make sure to only bind to localhost (ex: 127.0.0.1:9999:8080) when exposing ports
 [[ -f /etc/default/docker ]] && {
   echo '
   # Prevent Docker modifying iptables
