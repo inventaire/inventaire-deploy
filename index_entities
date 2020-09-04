@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+cd inventaire
+
+# Create indexes
+curl -XPUT http://localhost:9200/wikidata
+curl -XPUT http://localhost:9200/entities-prod
+
+alias import_to_elasticsearch="./scripts/entities_indexation/import_to_elasticsearch.js"
+
+# Load humans from the dump as they can't be imported from SPARQL queries (see 'update-and-import-all' later)
+# This is the fast(er) version but not with the freshest data, using a pre-filtered Wikidata dump, to be used to setup a development environment
+curl -s https://dumps.inventaire.io/wd/humans.ndjson.bz2 | pbzip2 -cd | import_to_elasticsearch
+
+# A (very) slow but fresher way to do it:
+# curl -s https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.bz2 | pbzip2 -cd | import_to_elasticsearch | ./node_modules/.bin/wikibase-dump-filter --claim P31:Q5 --omit type,sitelinks | ./bin/import_to_elasticsearch wikidata humans
+
+npm run entities-indexation:update-and-import-all
+
+# Import inventaire entities
+# Using the same name for the CouchDB database and the ElasticSearch index
+# expectets the env variable COUCHDB_AUTH_HOST to be set: COUCHDB_AUTH_HOST=http://username:password@localhost:5984
+ENTITIES_DB_NAME=entities-prod
+couchdb-view-by-keys $COUCHDB_AUTH_HOST/$ENTITIES_DB_NAME/_design/entities/_view/byClaim "['wdt:P31', 'wd:Q5']" | import_to_elasticsearch $ENTITIES_DB_NAME humans
+couchdb-view-by-keys $COUCHDB_AUTH_HOST/$ENTITIES_DB_NAME/_design/entities/_view/byClaim "['wdt:P31', 'wd:Q571']" | import_to_elasticsearch $ENTITIES_DB_NAME works
+couchdb-view-by-keys $COUCHDB_AUTH_HOST/$ENTITIES_DB_NAME/_design/entities/_view/byClaim "['wdt:P31', 'wd:Q277759']" | import_to_elasticsearch $ENTITIES_DB_NAME series
