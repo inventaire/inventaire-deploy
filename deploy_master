@@ -1,0 +1,15 @@
+# server-side deployment update
+
+- pull changes
+- install new libs `npm install --production`
+- `sudo systemctl restart inventaire-alt`
+- check if everything is fine: `journalctl -u inventaire-alt -af`
+- `sudo systemctl restart inventaire`
+
+# client side 
+
+- compile elsewhere to not overcrowd production server cpu 
+  (tip: enable multi-core compilation with env var `BRUNCH_JOBS=4`)
+- cd /local/path/to/inventaire/client && npm run build
+- `rsync -avz --delete ~/local/path/to/inventaire/client/public invprod:~/inventaire/client`
+
