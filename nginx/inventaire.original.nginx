@@ -142,7 +142,7 @@ server {
         # Let resources that can't be cache busted
         # - such as opensearch.xml or robots.txt -
         # out of this caching policy
-        if ($uri ~ "^/public/(js|css|fonts|i18n)/" ) {
+        if ($uri ~ "^/public/(dist|fonts)/" ) {
             add_header Cache-Control "immutable";
             # All headers that aren't in the last block won't be taken in account
             # thus the need to have CORS headers here too
