@@ -14,13 +14,10 @@ On your server:
 sudo apt-get install git
 # cloning the deployment tools in the local directory
 git clone https://github.com/inventaire/inventaire-deploy
-# start the magic
-./install
 ```
-You might also want to configure your firewall:
-```sh
-./setup_firewall
-```
+Now you 'just have' to install everything: see `./install` for a realistic preview of what that could look like (but don't just execute that script as it's more meant as a documentation)
+
+You might also want to configure your firewall: see `./setup_firewall`
 
 ### Other environments
 one environment -> one branch
@@ -31,7 +28,6 @@ Want to install it in a different environment? Request a new (orphan) branch and
 
 By default, this setup uses the same services as [inventaire.io](https://inventaire.io), but you can start your own instance of those too:
 * [Prerender](https://github.com/inventaire/prerender)
-* [Entities Search Engine](https://github.com/inventaire/entities-search-engine)
 
 ## Stack Map
 [![stack](https://raw.githubusercontent.com/inventaire/stack/master/snapshots/stack-from-deploy.png)](https://inventaire.github.io/stack/)

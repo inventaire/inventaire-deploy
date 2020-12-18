@@ -1,47 +1,31 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env sh
 
 set -eu
 
-echo "Generating self-signed keys for CouchDB"
-openssl req -x509 -sha256 -nodes -days 1095 -newkey rsa:2048 -keyout couch.key -out couch.crt -subj "/C=/ST=/L=/O=/OU=/CN=."
+# Following https://docs.couchdb.org/en/stable/install/unix.html for Ubuntu 20.04
+sudo apt-get install -y gnupg ca-certificates
+echo "deb https://apache.bintray.com/couchdb-deb focal main" | sudo tee /etc/apt/sources.list.d/couchdb.list
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
+sudo apt update
 
-# Customizing the Couchdb to the local needs.
-# Using '@' as delimiters in sed instead of '/' to avoid confusion with '/' in paths
-# cf http://stackoverflow.com/a/9366940/3324977
-cat local.original.ini |sed "s@PROJECT_ROOT@$PROJECT_ROOT@g" > local.custom.ini
+# You will be prompted for some setups:
+# - cluster or standalone: standalone should be fine
+# - set an 'admin' user password
+# - host ip: set to 0.0.0.0 if you want to setup replication from a remote server
+sudo apt install couchdb
 
-echo 'giving ownership of the keys and config files to couchdb'
-sudo chown couchdb:couchdb couch.crt couch.key local.custom.ini
-sudo chmod 600 couch.crt couch.key local.custom.ini
-sudo cp local.custom.ini /etc/couchdb/local.ini
+# SSL setup based on https://docs.couchdb.org/en/stable/config/http.html?highlight=ssl#https-ssl-tls-options
+mkdir /opt/couchdb/etc/cert
+cd /opt/couchdb/etc/cert
+openssl genrsa > privkey.pem
+openssl req -new -x509 -key privkey.pem -out couchdb.pem -days 1095 -subj "/C=/ST=/L=/O=/OU=/CN=."
+chmod 600 privkey.pem couchdb.pem
+chown couchdb privkey.pem couchdb.pem
 
-# See https://wiki.apache.org/couchdb/Performance#PAM_and_ulimit
-echo '
-#<domain>    <type>    <item>    <value>
-couchdb      hard      nofile    4096
-couchdb      soft      nofile    4096
-' | sudo tee /etc/security/limits.d/100-couchdb.conf
+# Add custom settings
+sudo cp custom.ini /opt/couchdb/etc/local.d/custom.ini
 
-read "COUCH_USER?Enter a CouchDB admin name (defaults to $USERNAME) "
-[ -z "$COUCH_USER" ] && COUCH_USER=$USERNAME
-
-read "COUCH_PW?Enter the admin's password (or get a randomly generated password if let blank) "
-# Random password generation source: http://security.stackexchange.com/questions/71187/one-liner-to-create-passwords-in-linux
-[ -z "$COUCH_PW" ] && COUCH_PW=$(mktemp -u XXXXXXXXXXXXXXXXXXXXXXXXXXX) && echo "your password: $COUCH_PW"
-
-sudo systemctl restart couchdb
-
-# let the time to restart
-sleep 2
-
-curl -kX PUT https://localhost:6984/_config/admins/$COUCH_USER -d '"'$COUCH_PW'"'
-# uncomment require_valid_user
-sudo sed -i "s/^;\s*require_valid_user/require_valid_user/g" /etc/couchdb/local.ini
 sudo systemctl restart couchdb
 
 # Databases will then be created by the nodejs server at first startup
-# You still got to setup database replication
-
-# Install couchdb-dump for future uses
-curl https://raw.githubusercontent.com/danielebailo/couchdb-dump/e873182bf81bd5243f13999b5feeb99e0d79f1f3/couchdb-backup.sh | sudo tee /usr/local/bin/couchdb-backup
-sudo chmod 777 /usr/local/bin/couchdb-backup
+# You still got to setup database replication on the remote server

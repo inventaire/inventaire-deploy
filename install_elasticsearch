@@ -1,33 +1,11 @@
 #!/usr/bin/env sh
 
-# Add Java installer repository (Java is an ElasticSearch dependency)
-sudo add-apt-repository ppa:webupd8team/java -y
-
-# Add ElasticSearch repository
-# See official documentation https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html
-wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list
-
+# Following https://www.elastic.co/guide/en/elasticsearch/reference/7.10/deb.html#deb-repo
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+sudo apt-get install apt-transport-https
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list
 sudo apt-get update
-sudo apt-get install oracle-java8-installer elasticsearch -y
-
-# ES_HOME=/usr/share/elasticsearch
-# CONF_DIR=/etc/elasticsearch
-# DATA_DIR=/var/lib/elasticsearch
-# LOG_DIR=/var/log/elasticsearch
-# PID_DIR=/var/run/elasticsearch
-# EnvironmentFile=/etc/default/elasticsearch
-# ServiceFile=/usr/lib/systemd/system/elasticsearch.service
-
-# Uncomment to log all requests
-# /!\ it will be fat and won't be available from journalctl but in dedicated files in /var/log/elasticsearch
-# source: http://blog.florian-hopf.de/2016/03/logging-requests-to-elasticsearch.html
-
-# echo "
-# .search.slowlog.threshold.query.debug: 0s
-# .search.slowlog.threshold.fetch.debug: 0s
-# .indexing.slowlog.threshold.index.debug: 0s
-# " |sudo tee /etc/elasticsearch/elasticsearch.yml
+sudo apt-get install elasticsearch
 
 # Customize ElasticSearch Unit to restart on failure
 # see https://github.com/elastic/elasticsearch/issues/25425
