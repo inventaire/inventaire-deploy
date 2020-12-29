@@ -22,3 +22,6 @@ sudo systemctl restart systemd-journald
 
 sudo systemctl start inventaire
 sudo systemctl start inventaire-alt
+
+# If you have existing CouchDB databases, you would now need to
+# * restore them, see https://github.com/inventaire/inventaire/blob/master/docs/couchdb_backup_and_restore.md#restore
