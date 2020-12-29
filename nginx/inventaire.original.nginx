@@ -21,8 +21,13 @@ upstream inventaire {
 }
 
 server {
-    # source: https://www.nginx.com/blog/nginx-1-9-5/
     listen 80;
+
+    # Required to be able to run `certbot -w /var/www/html/`
+    location /.well-known/ {
+        root /var/www/html/;
+    }
+
     location / {
         return 301 https://$host$request_uri;
     }
@@ -218,6 +223,11 @@ server {
     # see http://stackoverflow.com/a/34262192/3324977
     location ~ /\.git {
         deny all;
+    }
+
+    # Required to be able to run `certbot -w /var/www/html/`
+    location /.well-known/ {
+        root /var/www/html/;
     }
 
     location / {
