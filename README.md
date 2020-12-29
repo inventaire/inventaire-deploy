@@ -30,4 +30,4 @@ By default, this setup uses the same services as [inventaire.io](https://inventa
 * [Prerender](https://github.com/inventaire/prerender)
 
 ## Stack Map
-[![stack](https://raw.githubusercontent.com/inventaire/stack/master/snapshots/stack-from-deploy.png)](https://inventaire.github.io/stack/)
+This repo correspond to the the "deployment scripts" in the [stack map](https://inventaire.github.io/stack/)
