@@ -253,6 +253,9 @@ server {
         if ($args ~ "_escaped_fragment_") {
             set $prerender 1;
         }
+        if ($args ~ "__nojs") {
+            set $prerender 1;
+        }
         if ($http_user_agent ~ "Prerender") {
             set $prerender 0;
         }
