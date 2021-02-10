@@ -188,8 +188,8 @@ server {
         # proxy_set_header Connection "upgrade";
     }
 
-    # Let the API server handle all but /public JSON requests
-    location ~ "^/[^p].*\.json" {
+    # Let the API server handle all but /public JSON and RSS requests
+    location ~ "^/[^p].*\.(json|rss)$" {
         limit_except GET {
             deny  all;
         }
