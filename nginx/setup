@@ -26,8 +26,8 @@ cat inventaire.original.nginx |
  sed "s@PRERENDER_IP@$PRERENDER_IP@g" > inventaire.custom.nginx
 
 sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
-mkdir -p /tmp/images /tmp/nginx/resize
-sudo chmod 666 /tmp/images /tmp/nginx/resize
+mkdir -p /tmp/nginx/resize /tmp/nginx/tmp
+sudo chown -R data-www:data-www /tmp/nginx/resize /tmp/nginx/tmp
 
 # generate dhparam.pem file
 openssl dhparam -out $PROJECT_ROOT/nginx/dhparam.pem 2048
