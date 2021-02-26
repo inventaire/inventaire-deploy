@@ -4,6 +4,8 @@ alias agug="sudo apt-get -y upgrade"
 alias agar="sudo apt-get -y autoremove"
 alias agu="agud && agug && agar"
 alias neteth="sudo nethogs eth0"
+alias aliases='cat ~/.aliases | grep -i'
+alias alia='vim ~/.aliases && real'
 alias real="source ~/.aliases"
 alias edal="vi +$ ~/.aliases"
 alias ww='weightwatcher'
@@ -13,8 +15,15 @@ alias cdp="cd .."
 alias cdpp="cd ../.."
 alias ls="ls --color=auto"
 alias l="ls -lha"
+alias la="ls -lha"
 alias heaviest="du -sk * | sort -rn| head -n 20"
 alias chmox="chmod +x"
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
+alias c="clear"
+alias cc='c && cd'
 
 alias npmi="echo 'npm install --production' && npm install --production"
 alias npmig="echo 'npm install -g  --production' && npm install -g  --production"
@@ -76,11 +85,18 @@ gjo () {
   git checkout origin/$1 && git checkout -B $1
 }
 alias gjom="gjo master"
+gjoc () {
+    branch=$(git symbolic-ref --short HEAD)
+    git checkout -q origin/$branch
+    git checkout -q -B $branch
+}
+alias gfj='git fetch --all && gjoc'
 alias gf="git fetch"
 alias gfo="git fetch origin"
 alias gfom="git fetch origin master"
 alias gcop="git checkout -p"
 alias gap="git add --patch"
+alias gapa="git add --patch"
 alias gslast="git show HEAD"
 
 srm(){ mv $@ /tmp }
@@ -95,6 +111,7 @@ find_container(){
 }
 
 alias d=docker
+alias dk=docker
 alias dc=docker-compose
 dexec(){
   docker exec -it $( find_container $2 ) $1
