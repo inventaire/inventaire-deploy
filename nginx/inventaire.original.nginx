@@ -77,6 +77,9 @@ server {
     # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
     add_header Referrer-Policy 'no-referrer-when-downgrade' always;
 
+    # opt out Google Floc see: https://plausible.io/blog/google-floc#how-to-opt-out-of-floc-as-a-web-developer-set-a-permissions-policy
+    add_header Permissions-Policy interest-cohort=();
+
     client_max_body_size 5M;
 
     # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
