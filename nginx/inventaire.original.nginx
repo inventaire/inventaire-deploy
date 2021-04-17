@@ -287,7 +287,7 @@ server {
             expires -1;
 
             # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
-            add_header Referrer-Policy 'no-referrer-when-downgrade' always;
+            add_header Referrer-Policy 'origin' always;
 
             # opt out Google Floc see: https://plausible.io/blog/google-floc#how-to-opt-out-of-floc-as-a-web-developer-set-a-permissions-policy
             add_header Permissions-Policy interest-cohort=();
