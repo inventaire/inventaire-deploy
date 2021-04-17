@@ -272,7 +272,7 @@ server {
             # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
             add_header X-Content-Type-Options 'nosniff' always;
             # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
-            add_header Referrer-Policy 'origin' always;
+            add_header Referrer-Policy 'strict-origin' always;
             # opt out Google Floc see: https://plausible.io/blog/google-floc#how-to-opt-out-of-floc-as-a-web-developer-set-a-permissions-policy
             add_header Permissions-Policy interest-cohort=();
 
