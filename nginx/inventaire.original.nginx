@@ -71,9 +71,6 @@ server {
     ssl_stapling        on;
     ssl_stapling_verify on;
 
-    # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
-    add_header X-Content-Type-Options 'nosniff' always;
-
     client_max_body_size 5M;
 
     # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
@@ -272,6 +269,12 @@ server {
             add_header X-XSS-Protection "1; mode=block; report=/api/reports?action=csp-report;" always;
             add_header X-Frame-Options "SAMEORIGIN" always;
             add_header Strict-Transport-Security "max-age=31536000;" always;
+            # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
+            add_header X-Content-Type-Options 'nosniff' always;
+            # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
+            add_header Referrer-Policy 'origin' always;
+            # opt out Google Floc see: https://plausible.io/blog/google-floc#how-to-opt-out-of-floc-as-a-web-developer-set-a-permissions-policy
+            add_header Permissions-Policy interest-cohort=();
 
             # Keep in sync with server/middlewares/security.coffee@inventaire/inventaire
             set $csp "default-src 'self' www.wikidata.org; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://commons.wikimedia.org https://api.tiles.mapbox.com https://piwik.allmende.io data:; report-uri /api/reports?action=csp-report;";
@@ -284,12 +287,6 @@ server {
             # http://nginx.org/en/docs/http/ngx_http_headers_module.html
             # Those headers should be set here and not at "location /" as they would be ignored (cf http://serverfault.com/a/786248)
             expires -1;
-
-            # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
-            add_header Referrer-Policy 'origin' always;
-
-            # opt out Google Floc see: https://plausible.io/blog/google-floc#how-to-opt-out-of-floc-as-a-web-developer-set-a-permissions-policy
-            add_header Permissions-Policy interest-cohort=();
 
             rewrite .* /public/index.html break;
         }
