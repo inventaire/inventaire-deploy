@@ -1,0 +1,120 @@
+upstream inventaire {
+    server 127.0.0.1:3006 fail_timeout=5s;
+}
+
+server {
+    server_name sandbox.inventaire.io;
+    location / {
+      proxy_pass http://127.0.0.1:3006/;
+    }
+
+    # Do not remove the (.*) capture group as it seems to be required by the try_files
+    location ~ ^/img/(users|entities|assets)/(.*) {
+       root /tmp/nginx/resize;
+       default_type "image/jpeg";
+       add_header Cache-Control "immutable";
+       add_header X-File-Cache "hit";
+       try_files $uri @invimg;
+       limit_except GET {
+           deny  all;
+       }
+    }
+
+    # Same as above, but without the immutable
+    location ~ ^/img/remote/(.*) {
+       root /tmp/nginx/resize;
+       default_type "image/jpeg";
+       add_header X-File-Cache "hit";
+       try_files $uri @invimg;
+       limit_except GET {
+           deny  all;
+       }
+    }
+
+    location ~ ^/img/ {
+        return 404;
+    }
+
+    location @invimg {
+      default_type "image/jpeg";
+      # add_header Content-Type "image/jpeg";
+      add_header Cache-Control "immutable";
+      add_header X-File-Cache "miss";
+      proxy_temp_path      /tmp/nginx/tmp;
+      proxy_store          /tmp/nginx/resize/$uri;
+      proxy_store_access   user:rw  group:rw  all:r;
+      proxy_http_version 1.1;
+      proxy_pass http://inventaire;
+    }
+
+    # following aliases made in order to respect the url structure
+    # the server alone would follow: especially, mounting /static on /public
+    root  /home/admin/docker-inventaire/inventaire/client;
+    location /public/ {
+        gzip_static on;
+        # Let resources that can't be cache busted
+        # - such as opensearch.xml or robots.txt -
+        # out of this caching policy
+        if ($uri ~ "^/public/(dist|fonts)/" ) {
+            add_header Cache-Control "public";
+            add_header Cache-Control "immutable";
+            expires 1y;
+            # All headers that aren't in the last block won't be taken in account
+            # thus the need to have CORS headers here too
+            add_header 'Access-Control-Allow-Origin' '*' always;
+            add_header 'Access-Control-Allow-Methods' 'GET' always;
+        }
+    }
+
+    # Pass the request to the node.js server
+    # with some correct headers for proxy-awareness
+    location /api {
+        # Let the server decide when CORS headers should be added
+
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_redirect off;
+
+        # Set a large value to let the API determine the appropriate
+        # timeout per endpoint
+        # http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout
+        proxy_read_timeout 3600;
+
+        proxy_pass http://inventaire;
+
+        # Handle Web Socket connections
+        # proxy_http_version 1.1;
+        # proxy_set_header Upgrade $http_upgrade;
+        # proxy_set_header Connection "upgrade";
+    }
+
+    # Let the API server handle JSON requests, but those from /public files
+    # location ~ ".*\.json" {
+    location ~ "^/[^p].*\.json" {
+        # Same as /api, couldn't find a proper way to DRY it
+        # The 'include' strategy (http://stackoverflow.com/a/35375548/3324977)
+        # failed as Nginx rejected the proxy directives at this place
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+        proxy_pass http://inventaire;
+        proxy_redirect off;
+    }
+
+    location = /favicon.ico {
+        try_files /public/$uri /public/images/$uri;
+        expires 30d;
+        add_header Cache-Control "public";
+    }
+
+    # Prevent exposing git folders such as /public/i18n/.git
+    # For why this rule takes precedence over location /public/
+    # see http://stackoverflow.com/a/34262192/3324977
+    location ~ /\.git {
+        deny all;
+    }
+
+}
