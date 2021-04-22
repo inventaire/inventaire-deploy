@@ -18,6 +18,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.history
 
+bindkey "ù" up-line-or-search
+
 # To save every command before it is executed (this is different from bash's history -a solution):
 setopt inc_append_history
 # To retrieve the history file everytime history is called upon.

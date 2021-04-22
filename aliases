@@ -1,4 +1,6 @@
 alias agi="sudo apt-get -y install"
+alias apti="sudo apt-get -y install"
+alias aptud="echo UPDATE && sudo apt-get update -y && echo UPGRADE && sudo apt-get upgrade && echo AUTOREMOVE && sudo apt-get autoremove && sudo apt clean"
 alias agud="sudo apt-get -y update"
 alias agug="sudo apt-get -y upgrade"
 alias agar="sudo apt-get -y autoremove"
@@ -13,6 +15,7 @@ alias cdp="cd .."
 alias cdpp="cd ../.."
 alias ls="ls --color=auto"
 alias l="ls -lha"
+alias ll="ls -lha"
 alias heaviest="du -sk * | sort -rn| head -n 20"
 alias chmox="chmod +x"
 
@@ -75,6 +78,16 @@ alias gj="git checkout -B"
 gjo () {
   git checkout origin/$1 && git checkout -B $1
 }
+gcom () {
+  [[ "$(gb -l main)" =~ [[main]]*$ ]] && gco main
+  [[ "$(gb -l master)" =~ [[master]]*$ ]] && gco master
+}
+gjoc () {
+    branch=$(git symbolic-ref --short HEAD)
+    git checkout -q origin/$branch
+    git checkout -q -B $branch
+}
+alias gfj='git fetch --all && gjoc'
 alias gjom="gjo master"
 alias gf="git fetch"
 alias gfo="git fetch origin"
@@ -135,3 +148,10 @@ find_container_using_volume(){
 alias ds="docker stats"
 alias di="docker image"
 alias dis="docker images"
+
+alias c="clear"
+alias cc='c && cd'
+alias ..='cd ..'
+alias ...='cd ../../'
+alias ....='cd ../../../'
+alias .....='cd ../../../../'
