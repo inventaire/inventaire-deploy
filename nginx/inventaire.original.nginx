@@ -96,7 +96,7 @@ server {
     location ~ ^/img/(users|entities|assets)/(.*) {
        root /tmp/nginx/resize;
        default_type "image/jpeg";
-       add_header Cache-Control "immutable";
+       add_header Cache-Control "public, max-age=31536000, immutable";
        add_header X-File-Cache "hit";
        try_files $uri @invimg;
        limit_except GET {
@@ -121,7 +121,6 @@ server {
 
     location @invimg {
       default_type "image/jpeg";
-      add_header Cache-Control "immutable";
       add_header X-File-Cache "miss";
       proxy_temp_path      /tmp/nginx/tmp;
       proxy_store          /tmp/nginx/resize/$uri;
@@ -142,7 +141,7 @@ server {
         # - such as opensearch.xml or robots.txt -
         # out of this caching policy
         if ($uri ~ "^/public/(dist|fonts)/" ) {
-            add_header Cache-Control "immutable";
+            add_header Cache-Control "public, max-age=31536000, immutable";
             # All headers that aren't in the last block won't be taken in account
             # thus the need to have CORS headers here too
             add_header 'Access-Control-Allow-Origin' '*' always;
