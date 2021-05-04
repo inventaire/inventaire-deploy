@@ -23,6 +23,7 @@ swift upload testcontainer .
 swift post --read-acl '.r:*,.rlistings' testcontainer
 ```
 
+### Replication
 To created the replicated containers:
 * load the config for that other region
 ```
