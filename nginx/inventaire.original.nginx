@@ -93,7 +93,7 @@ server {
     # directive instead
 
     # Do not remove the (.*) capture group as it seems to be required by the try_files
-    location ~ ^/img/(users|entities|assets)/(.*) {
+    location ~ ^/img/(groups|users|entities|assets)/(.*) {
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header Cache-Control "public, max-age=31536000, immutable";
