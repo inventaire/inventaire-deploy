@@ -20,6 +20,14 @@ upstream inventaire {
     server 127.0.0.1:3007 backup;
 }
 
+# Using error_page as a way to have a named location that can
+# then be shared between several locations, see:
+# https://serverfault.com/questions/908086/nginx-directly-send-from-location-to-another-named-location
+# https://www.nginx.com/resources/wiki/start/topics/depth/ifisevil/#what-to-do-instead
+# Contrary to what the documentation says, the HTTP verbs aren't all converted to GET
+# http://nginx.org/en/docs/http/ngx_http_core_module.html#error_page
+error_page 543 = @invserver;
+
 server {
     listen 80;
 
@@ -152,6 +160,22 @@ server {
     # Pass the request to the node.js server
     # with some correct headers for proxy-awareness
     location /api {
+        return 543;
+    }
+
+    location /.well-known/webfinger {
+        return 543;
+    }
+
+    # Let the API server handle all but /public JSON and RSS requests
+    location ~ "^/[^p].*\.(json|rss)$" {
+        limit_except GET {
+            deny  all;
+        }
+        return 543;
+    }
+
+    location @invserver {
         # Let the server decide when CORS headers should be added
 
         proxy_set_header X-Real-IP $remote_addr;
@@ -174,28 +198,6 @@ server {
         }
 
         proxy_pass http://inventaire;
-
-        # Handle Web Socket connections
-        # proxy_http_version 1.1;
-        # proxy_set_header Upgrade $http_upgrade;
-        # proxy_set_header Connection "upgrade";
-    }
-
-    # Let the API server handle all but /public JSON and RSS requests
-    location ~ "^/[^p].*\.(json|rss)$" {
-        limit_except GET {
-            deny  all;
-        }
-        # Same as /api, couldn't find a proper way to DRY it
-        # The 'include' strategy (http://stackoverflow.com/a/35375548/3324977)
-        # failed as Nginx rejected the proxy directives at this place
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_set_header X-NginX-Proxy true;
-        proxy_http_version 1.1;
-        proxy_pass http://inventaire;
-        proxy_redirect off;
     }
 
     location = /favicon.ico {
