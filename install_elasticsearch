@@ -26,3 +26,13 @@ RestartSec=3
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
+
+
+# Disabling GeoIP
+# see https://www.elastic.co/guide/en/elasticsearch/reference/current/geoip-processor.html
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-update-settings.html
+curl -H 'content-type: application/json' -XPUT "http://localhost:9200/_cluster/settings" -d '{
+  "persistent" : {
+    "ingest.geoip.downloader.enabled" : false
+  }
+}'
