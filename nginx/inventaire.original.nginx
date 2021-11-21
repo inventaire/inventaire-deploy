@@ -166,6 +166,8 @@ server {
         include /etc/nginx/snippets/security_headers.conf;
         # Let the server decide when CORS headers should be added
         proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+
         # Set a large value to let the API determine the appropriate
         # timeout per endpoint
         # http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout
