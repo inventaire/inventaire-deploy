@@ -13,17 +13,16 @@ Setup currently used for http://sandbox.inventaire.io
 
 Install [docker](https://docs.docker.com/engine/install/ubuntu/)
 
+```sh
 sudo apt-get install docker-compose -y
 
-sudo apt-get install curl zsh git nginx graphicsmagick openssl inotify-tools software-properties-common -y
-sudo apt-get install fail2ban
+sudo apt-get install curl zsh git nginx graphicsmagick openssl inotify-tools software-properties-common fail2ban -y
+```
 
 Follow docker-inventaire install instructions: https://github.com/inventaire/docker-inventaire
-
+```sh
 curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/master/aliases > ~/.aliases
 curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/master/zshrc > ~/.zshrc
-
-sudo apt install nginx
 
 curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/master/nginx/inventaire.sandbox.nginx > /etc/nginx/sites-enabled/default
 
@@ -42,10 +41,10 @@ echo "module.exports = {
 }
 " > ~/docker-inventaire/inventaire/config/local.js
 
-
 curljson -XPUT -s "http://couchdb:password@localhost:5984/_users"
 
 cd docker-inventaire && sudo docker-compose restart inventaire
 
 cd ~/docker-inventaire/inventaire/
 mkdir -p storage/users storage/entities
+```
