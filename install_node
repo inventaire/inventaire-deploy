@@ -1,8 +1,15 @@
-#!/usr/bin/env zsh
-# executing with zsh to have to `source`
+#!/usr/bin/env bash
 
-# installing NVM, the awesome NodeJs verion manager https://github.com/nvm-sh/nvm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash
+set -eo pipefail
+
+tmpdir=$(mktemp -d)
+
+# installing NVM, the NodeJS verion manager https://github.com/nvm-sh/nvm
+curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh -o "${tmpdir}/install.sh"
+
+# Check that it is the right file before executing
+echo 0b882590028d326ce5d07a198c1061d2ab2ba00e3631e8ed96f65a60d06a8619 "${tmpdir}/install.sh" | sha256sum --check --strict
+bash "${tmpdir}/install.sh"
 source ~/.nvm/nvm.sh
 
 nvm install 14
