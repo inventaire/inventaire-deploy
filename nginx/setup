@@ -25,12 +25,13 @@ cat inventaire.original.nginx |
  sed "s@PRERENDER_INSTANCE@$PRERENDER_INSTANCE@g" |
  sed "s@PRERENDER_IP@$PRERENDER_IP@g" > inventaire.custom.nginx
 
+sudo cp ssl.conf security_headers.conf /etc/nginx/snippets
 sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
 mkdir -p /tmp/nginx/resize/img/{entities,users,groups,assets,remote} /tmp/nginx/tmp
 sudo chown -R data-www:data-www /tmp/nginx/resize /tmp/nginx/tmp
 
 # generate dhparam.pem file
-openssl dhparam -out $PROJECT_ROOT/nginx/dhparam.pem 2048
+sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
 
 # Copy instead of simply linking as some system fail to find the symbolic link target
 sudo cp $PROJECT_ROOT/nginx/nginx.service /etc/systemd/system/

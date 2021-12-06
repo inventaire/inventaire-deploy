@@ -44,19 +44,9 @@ server {
 server {
     listen              443 ssl http2;
     server_name         www.DOMAIN_NAME;
-    ssl_prefer_server_ciphers on;
-    ssl_session_timeout 1d;
-    ssl_session_cache   shared:SSL:50m;
-    ssl_session_tickets off;
-
-    # Source: https://ssl-config.mozilla.org/#server=nginx&server-version=1.10.3&config=intermediate&openssl-version=1.0.2g&hsts=false
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
-    ssl_prefer_server_ciphers off;
-
-    ssl_stapling        on;
-    ssl_stapling_verify on;
+    include /etc/nginx/snippets/ssl.conf;
     location / {
+        include /etc/nginx/snippets/security_headers.conf;
         return 301 https://DOMAIN_NAME$request_uri;
     }
 }
@@ -68,17 +58,7 @@ server {
     # 'ssl_certificate' and 'ssl_certificate_key' will be added
     # by LetsEncrypt certbot
 
-    ## source: https://mozilla.github.io/server-side-tls/ssl-config-generator/
-    ssl_prefer_server_ciphers on;
-    ssl_session_timeout 5m;
-    ssl_session_cache   shared:SSL:50m;
-    ssl_session_tickets off;
-    ssl_dhparam         PROJECT_ROOT/nginx/dhparam.pem;
-
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
-    ssl_stapling        on;
-    ssl_stapling_verify on;
+    include /etc/nginx/snippets/ssl.conf;
 
     client_max_body_size 5M;
 
@@ -103,6 +83,7 @@ server {
 
     # Do not remove the (.*) capture group as it seems to be required by the try_files
     location ~ ^/img/(groups|users|entities|assets)/(.*) {
+       include /etc/nginx/snippets/security_headers.conf;
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header Cache-Control "public, max-age=31536000, immutable";
@@ -115,6 +96,7 @@ server {
 
     # Same as above, but without the immutable
     location ~ ^/img/remote/(.*) {
+       include /etc/nginx/snippets/security_headers.conf;
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header X-File-Cache "hit";
@@ -125,10 +107,12 @@ server {
     }
 
     location ~ ^/img/(\d+)x(\d+)/(.*) {
+        include /etc/nginx/snippets/security_headers.conf;
         return 404;
     }
 
     location @invimg {
+      include /etc/nginx/snippets/security_headers.conf;
       default_type "image/jpeg";
       add_header X-File-Cache "miss";
       proxy_temp_path      /tmp/nginx/tmp;
@@ -142,6 +126,7 @@ server {
     # the server alone would follow: especially, mounting /static on /public
     root  PROJECT_ROOT/inventaire/client;
     location /public/ {
+        include /etc/nginx/snippets/security_headers.conf;
         limit_except GET {
             deny  all;
         }
@@ -150,6 +135,7 @@ server {
         # - such as opensearch.xml or robots.txt -
         # out of this caching policy
         if ($uri ~ "^/public/(dist|fonts)/" ) {
+            include /etc/nginx/snippets/security_headers.conf;
             add_header Cache-Control "public, max-age=31536000, immutable";
             # All headers that aren't in the last block won't be taken in account
             # thus the need to have CORS headers here too
@@ -177,8 +163,12 @@ server {
     }
 
     location @invserver {
+        include /etc/nginx/snippets/security_headers.conf;
         # Let the server decide when CORS headers should be added
         proxy_set_header Host $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Host $host;
+
         # Set a large value to let the API determine the appropriate
         # timeout per endpoint
         # http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout
@@ -194,12 +184,14 @@ server {
     }
 
     location = /favicon.ico {
+        include /etc/nginx/snippets/security_headers.conf;
         try_files /public/$uri /public/images/$uri;
         expires 30d;
         add_header Cache-Control "public";
     }
 
     location = /robots.txt {
+        include /etc/nginx/snippets/security_headers.conf;
         gzip_static on;
         try_files /public/$uri /$uri;
         expires 1d;
@@ -215,10 +207,12 @@ server {
 
     # Required to be able to run `certbot -w /var/www/html/`
     location /.well-known/ {
+        include /etc/nginx/snippets/security_headers.conf;
         root /var/www/html/;
     }
 
     location / {
+        include /etc/nginx/snippets/security_headers.conf;
         gzip_static on;
         try_files $uri @prerender;
         limit_except GET {
@@ -259,22 +253,10 @@ server {
             proxy_pass PRERENDER_INSTANCE;
         }
         if ($prerender = 0) {
-            # source: https://gist.github.com/plentz/6737338
-            add_header X-XSS-Protection "1; mode=block; report=/api/reports?action=csp-report;" always;
-            add_header X-Frame-Options "SAMEORIGIN" always;
-            add_header Strict-Transport-Security "max-age=31536000;" always;
-            # source: https://scotthelme.co.uk/hardening-your-http-response-headers/#x-content-type-options
-            add_header X-Content-Type-Options 'nosniff' always;
-            # source: https://scotthelme.co.uk/a-new-security-header-referrer-policy/
-            add_header Referrer-Policy 'strict-origin' always;
-            # opt out Google Floc see: https://plausible.io/blog/google-floc#how-to-opt-out-of-floc-as-a-web-developer-set-a-permissions-policy
-            add_header Permissions-Policy interest-cohort=();
+            include /etc/nginx/snippets/security_headers.conf;
 
-            # Keep in sync with server/middlewares/security.coffee@inventaire/inventaire
-            set $csp "default-src 'self' www.wikidata.org; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https://commons.wikimedia.org https://api.tiles.mapbox.com https://piwik.allmende.io data:; report-uri /api/reports?action=csp-report;";
-            add_header Content-Security-Policy $csp; # Standard
-            add_header X-Content-Security-Policy $csp; # Firefox <23 & IE 10, 11
-            add_header X-WebKit-CSP $csp; # Safari <7 and Chrome <25
+            add_header Report-To '{"max_age":10886400,"endpoints":[{"url":"https://inventaire.io/api/reports?action=csp-report"}]}'
+            add_header Content-Security-Policy-Report-Only "default-src 'self' www.wikidata.org; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' commons.wikimedia.org api.tiles.mapbox.com piwik.allmende.io data:; report-uri /api/reports?action=csp-report; report-to default"
 
             # index.html should always be fresh out of the server
             # time is negative => “Cache-Control: no-cache”
