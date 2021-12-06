@@ -167,6 +167,7 @@ server {
         # Let the server decide when CORS headers should be added
         proxy_set_header Host $http_host;
         proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Host $host;
 
         # Set a large value to let the API determine the appropriate
         # timeout per endpoint
