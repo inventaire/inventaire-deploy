@@ -256,7 +256,7 @@ server {
             include /etc/nginx/snippets/security_headers.conf;
 
             add_header Report-To '{"max_age":10886400,"endpoints":[{"url":"https://inventaire.io/api/reports?action=csp-report"}]}'
-            add_header Content-Security-Policy-Report-Only "default-src 'self' www.wikidata.org; child-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' commons.wikimedia.org api.tiles.mapbox.com piwik.allmende.io data:; report-uri /api/reports?action=csp-report; report-to default"
+            add_header Content-Security-Policy-Report-Only "default-src 'self' www.wikidata.org; child-src 'self' 'blob'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' commons.wikimedia.org api.tiles.mapbox.com piwik.allmende.io data:; report-uri /api/reports?action=csp-report; report-to default"
 
             # index.html should always be fresh out of the server
             # time is negative => “Cache-Control: no-cache”
