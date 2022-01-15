@@ -33,8 +33,12 @@ sudo chown -R data-www:data-www /tmp/nginx/resize /tmp/nginx/tmp
 # generate dhparam.pem file
 sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
 
-# Copy instead of simply linking as some system fail to find the symbolic link target
-sudo cp $PROJECT_ROOT/nginx/nginx.service /etc/systemd/system/
+sudo mkdir -p /etc/systemd/system/nginx.service.d
+echo '
+[Service]
+ExecStartPre=/bin/mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
+ExecStartPre=/bin/chown -R www-data:www-data /tmp/nginx
+' | sudo tee /etc/systemd/system/nginx.service.d/override.conf
 
 # setup nginx systemd service
 sudo systemctl daemon-reload
