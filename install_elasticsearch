@@ -20,6 +20,7 @@ StartLimitBurst=5
 [Service]
 Restart=always
 RestartSec=3
+Environment=ES_JAVA_OPTS="-Xms2g -Xmx2g"
 ' | sudo tee /etc/systemd/system/elasticsearch.service.d/override.conf
 
 # Start ElasticSearch at startup
