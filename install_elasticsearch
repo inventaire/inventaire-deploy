@@ -25,8 +25,8 @@ Environment=ES_JAVA_OPTS="-Xms2g -Xmx2g"
 
 # Start ElasticSearch at startup
 sudo systemctl daemon-reload
-sudo systemctl enable elasticsearch.service
-sudo systemctl start elasticsearch.service
+sudo systemctl enable elasticsearch
+sudo systemctl start elasticsearch
 
 
 # Disabling GeoIP
