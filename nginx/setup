@@ -27,8 +27,6 @@ cat inventaire.original.nginx |
 
 sudo cp ssl.conf security_headers.conf /etc/nginx/snippets
 sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
-mkdir -p /tmp/nginx/resize/img/{entities,users,groups,assets,remote} /tmp/nginx/tmp
-sudo chown -R data-www:data-www /tmp/nginx/resize /tmp/nginx/tmp
 
 # generate dhparam.pem file
 sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
@@ -36,7 +34,7 @@ sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
 sudo mkdir -p /etc/systemd/system/nginx.service.d
 echo '
 [Service]
-ExecStartPre=/bin/mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
+ExecStartPre=/bin/mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
 ExecStartPre=/bin/chown -R www-data:www-data /tmp/nginx
 ' | sudo tee /etc/systemd/system/nginx.service.d/override.conf
 
