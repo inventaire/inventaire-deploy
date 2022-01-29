@@ -30,6 +30,7 @@ error_page 543 = @invserver;
 
 server {
     listen 80;
+    listen [::]:80;
 
     # Required to be able to run `certbot -w /var/www/html/`
     location /.well-known/ {
@@ -42,8 +43,9 @@ server {
 }
 
 server {
-    listen              443 ssl http2;
-    server_name         www.DOMAIN_NAME;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.DOMAIN_NAME;
     include /etc/nginx/snippets/ssl.conf;
     location / {
         include /etc/nginx/snippets/security_headers.conf;
@@ -52,8 +54,9 @@ server {
 }
 
 server {
-    listen              443 ssl http2;
-    server_name         DOMAIN_NAME;
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name DOMAIN_NAME;
 
     # 'ssl_certificate' and 'ssl_certificate_key' will be added
     # by LetsEncrypt certbot
