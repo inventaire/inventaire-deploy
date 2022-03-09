@@ -27,6 +27,15 @@ chown couchdb privkey.pem couchdb.pem
 # Add custom settings
 sudo cp custom.ini /opt/couchdb/etc/local.d/custom.ini
 
+# Increase Query Servers max memory
+# See https://docs.couchdb.org/en/stable/config/query-servers.html
+sudo mkdir -p /etc/systemd/system/couchdb.service.d/
+echo '
+[Service]
+Environment=COUCHDB_QUERY_SERVER_JAVASCRIPT="/opt/couchdb/bin/couchjs -S 536870912 /opt/couchdb/share/server/main.js"
+' | sudo tee /etc/systemd/system/couchdb.service.d/override.conf
+
+sudo systemctl daemon-reload
 sudo systemctl restart couchdb
 
 # Databases will then be created by the nodejs server at first startup
