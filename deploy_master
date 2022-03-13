@@ -14,3 +14,11 @@
 - `rsync -avz ~/local/path/to/inventaire/client/public invprod:~/inventaire/client`
 - `find client/public -type f -mtime +30 -exec rm -f {} \;`
 
+## Maintenance
+
+### Reset human tasks
+
+- https://github.com/inventaire/inventaire/blob/master/docs/leveldb_operations.md#delete-entries-in-bulk
+  - `"[credentials]/tasks-prod/_design/tasks/_view/byEntitiesType?include_docs=true"  -d '{"key":"human"}'|jq '.rows[].doc|._deleted=true' -cr > /tmp/tasks_delete`
+- `cat /tmp/tasks_delete | couchdb-bulk2 "[credentials]/tasks-prod"`
+- curljson -XPOST "https://[credentials]@inventaire.io/api/tasks?action=collect-entities"
