@@ -21,3 +21,12 @@
   - `"[credentials]/tasks-prod/_design/tasks/_view/byEntitiesType?include_docs=true"  -d '{"key":"human"}'|jq '.rows[].doc|._deleted=true' -cr > /tmp/tasks_delete`
 - `cat /tmp/tasks_delete | couchdb-bulk2 "[credentials]/tasks-prod"`
 - curljson -XPOST "https://[credentials]@inventaire.io/api/tasks?action=collect-entities"
+
+### i18n
+- commit on master server branch
+- `cd ..`
+- `npm run update-i18n`
+- `cd inventaire/client/inventaire-i18n`
+- `npm run update-dist`
+- `cd inventaire/client`
+- compile and rsync client
