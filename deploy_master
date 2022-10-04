@@ -9,7 +9,6 @@
 # client side 
 
 - compile elsewhere to not overcrowd production server cpu 
-  (tip: enable multi-core compilation with env var `BRUNCH_JOBS=4`)
 - cd /local/path/to/inventaire/client && npm run build
 - `rsync -avz ~/local/path/to/inventaire/client/public invprod:~/inventaire/client`
 - `find client/public -type f -mtime +30 -exec rm -f {} \;`
