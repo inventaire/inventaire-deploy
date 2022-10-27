@@ -4,7 +4,7 @@ Tools and scripts to document the installation of [inventaire](https://github.co
 
 See also [docker-inventaire](https://github.com/inventaire/docker-inventaire)
 
-:warning: you are free to do anything the [AGPL-3.0 license](https://en.wikipedia.org/wiki/GNU_Affero_General_Public_License) allows you to, but this documentation is not an invitation to self-host your own instance (Inventaire is not ready/optimized for [decentralization](https://github.com/inventaire/inventaire/issues/187))
+:warning: You may do anything the [AGPL-3.0 license](https://en.wikipedia.org/wiki/GNU_Affero_General_Public_License) allows you to, but this documentation is not an invitation to self-host your own instance (Inventaire is not ready/optimized for [decentralization](https://github.com/inventaire/inventaire/issues/187) or for [self-hosting](https://wiki.inventaire.io/wiki/Framasoft_interview_translation#Is_it_possible_to_self-host_inventaire)).
 
 ## Installation
 ### Ubuntu
