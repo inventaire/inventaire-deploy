@@ -91,6 +91,7 @@ server {
        default_type "image/jpeg";
        add_header Cache-Control "public, max-age=31536000, immutable";
        add_header X-File-Cache "hit";
+       add_header Content-Security-Policy "sandbox";
        try_files $uri @invimg;
        limit_except GET {
            deny  all;
@@ -103,6 +104,7 @@ server {
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header X-File-Cache "hit";
+       add_header Content-Security-Policy "sandbox";
        try_files $uri @invimg;
        limit_except GET {
            deny  all;
@@ -118,6 +120,7 @@ server {
       include /etc/nginx/snippets/security_headers.conf;
       default_type "image/jpeg";
       add_header X-File-Cache "miss";
+      add_header Content-Security-Policy "sandbox";
       proxy_temp_path      /tmp/nginx/tmp;
       proxy_store          /tmp/nginx/resize/$uri;
       proxy_store_access   user:rw  group:rw  all:r;
