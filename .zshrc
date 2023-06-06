@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
+
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # source : http://doc.ubuntu-fr.org/zsh
 zstyle ':completion:*:descriptions' format '%U%B%d%b%u'
 zstyle ':completion:*:warnings' format '%BSorry, no matches for: %d%b'
