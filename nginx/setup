@@ -32,8 +32,12 @@ sudo cp inventaire.custom.nginx /etc/nginx/sites-available/default
 sudo openssl dhparam -out /etc/nginx/dhparam.pem 2048
 
 sudo mkdir -p /etc/systemd/system/nginx.service.d
+
+# PermissionsStartOnly=true is required to prevent `mkdir() "/tmp/nginx/tmp" failed (2: No such file or directory)` errors
+# See https://unix.stackexchange.com/a/207493/164977
 echo '
 [Service]
+PermissionsStartOnly=true
 ExecStartPre=/bin/mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
 ExecStartPre=/bin/chown -R www-data:www-data /tmp/nginx
 ' | sudo tee /etc/systemd/system/nginx.service.d/override.conf
