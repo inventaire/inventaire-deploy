@@ -96,6 +96,12 @@ alias gcop="git checkout -p"
 alias gap="git add --patch"
 alias gslast="git show HEAD"
 
+# git branch delete local all
+gbdla(){
+  git branch -D "$1"
+  git branch -Dr "origin/$1"
+}
+
 srm(){ mv $@ /tmp }
 
 export LH=http://localhost
