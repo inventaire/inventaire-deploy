@@ -5,11 +5,13 @@ upstream inventaire {
 server {
     server_name sandbox.inventaire.io;
     location / {
+      include /etc/nginx/snippets/security_headers.conf;
       proxy_pass http://127.0.0.1:3006/;
     }
 
     # Do not remove the (.*) capture group as it seems to be required by the try_files
     location ~ ^/img/(users|entities|assets)/(.*) {
+       include /etc/nginx/snippets/security_headers.conf;
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header Cache-Control "immutable";
@@ -22,6 +24,7 @@ server {
 
     # Same as above, but without the immutable
     location ~ ^/img/remote/(.*) {
+       include /etc/nginx/snippets/security_headers.conf;
        root /tmp/nginx/resize;
        default_type "image/jpeg";
        add_header X-File-Cache "hit";
@@ -32,6 +35,7 @@ server {
     }
 
     location ~ ^/img/ {
+        include /etc/nginx/snippets/security_headers.conf;
         return 404;
     }
 
@@ -40,6 +44,7 @@ server {
       # add_header Content-Type "image/jpeg";
       add_header Cache-Control "immutable";
       add_header X-File-Cache "miss";
+      include /etc/nginx/snippets/security_headers.conf;
       proxy_temp_path      /tmp/nginx/tmp;
       proxy_store          /tmp/nginx/resize/$uri;
       proxy_store_access   user:rw  group:rw  all:r;
@@ -52,12 +57,14 @@ server {
     root  /home/admin/docker-inventaire/inventaire/client;
     location /public/ {
         gzip_static on;
+        include /etc/nginx/snippets/security_headers.conf;
         # Let resources that can't be cache busted
         # - such as opensearch.xml or robots.txt -
         # out of this caching policy
         if ($uri ~ "^/public/(dist|fonts)/" ) {
             add_header Cache-Control "public";
             add_header Cache-Control "immutable";
+            include /etc/nginx/snippets/security_headers.conf;
             expires 1y;
             # All headers that aren't in the last block won't be taken in account
             # thus the need to have CORS headers here too
@@ -69,12 +76,14 @@ server {
     # Pass the request to the node.js server
     # with some correct headers for proxy-awareness
     location /api {
+        include /etc/nginx/snippets/security_headers.conf;
         # Let the server decide when CORS headers should be added
 
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $http_host;
         proxy_set_header X-NginX-Proxy true;
+        proxy_set_header X-Forwarded-Proto https;
         proxy_redirect off;
 
         # Set a large value to let the API determine the appropriate
@@ -93,6 +102,7 @@ server {
     # Let the API server handle JSON requests, but those from /public files
     # location ~ ".*\.json" {
     location ~ "^/[^p].*\.json" {
+        include /etc/nginx/snippets/security_headers.conf;
         # Same as /api, couldn't find a proper way to DRY it
         # The 'include' strategy (http://stackoverflow.com/a/35375548/3324977)
         # failed as Nginx rejected the proxy directives at this place
@@ -105,10 +115,16 @@ server {
     }
 
     location = /favicon.ico {
+        include /etc/nginx/snippets/security_headers.conf;
         try_files /public/$uri /public/images/$uri;
         expires 30d;
         add_header Cache-Control "public";
     }
+
+   # Prevent dupplicated content with the main instance
+   location = /robots.txt {
+       return 200 "User-agent: *\nDisallow: /\n";
+   }
 
     # Prevent exposing git folders such as /public/i18n/.git
     # For why this rule takes precedence over location /public/
@@ -116,5 +132,28 @@ server {
     location ~ /\.git {
         deny all;
     }
+
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/sandbox.inventaire.io/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/sandbox.inventaire.io/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+
+
+server {
+    if ($host = sandbox.inventaire.io) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name sandbox.inventaire.io;
+    listen 80;
+    return 404; # managed by Certbot
+
 
 }
