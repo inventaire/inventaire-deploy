@@ -47,4 +47,5 @@ cd docker-inventaire && sudo docker-compose restart inventaire
 
 cd ~/docker-inventaire/inventaire/
 mkdir -p storage/users storage/entities
+mkdir -p /tmp/nginx/tmp /tmp/nginx/resize/img/users /tmp/nginx/resize/img/groups /tmp/nginx/resize/img/entities /tmp/nginx/resize/img/remote /tmp/nginx/resize/img/assets
 ```
