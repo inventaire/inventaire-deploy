@@ -15,6 +15,18 @@ sudo apt-get install curl zsh git nginx graphicsmagick openssl inotify-tools sof
 # - build-essential: installs `make`, which is required by npm:heapdump
 sudo apt-get install fail2ban build-essential
 
+echo "
+[sshd]
+enabled = true
+port = ssh
+filter = sshd
+maxretry = 3
+bantime = 31536000
+findtime = 864000
+" | sudo tee /etc/fail2ban/jail.d/sshd.conf
+
+sudo systemctl restart fail2ban
+
 # NOTES
 # - fail2ban: should work out of the box for ssh
 # https://github.com/fail2ban/fail2ban
