@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+# Things that can be done to recover disk space
+# Use `ncdu` to identify what is taking so much space
+
+# After a journal backup
+sudo journalctl --vacuum-size=10M
+
+# Remove linux headers among other things
+# Remove all cached packages stored in /var/cache (without uninstalling)
+sudo apt-get autoremove && sudo apt-get clean
+
+# References:
+# https://doc.ubuntu-fr.org/nettoyer_ubuntu
+
+# client node_modules aren't needed as the client is built on devs machines and rsynced
+rm -rf ~/inventaire/client/node_modules
+
+# DBs compaction, should be done automatically by CouchDB since CouchDB 2.1.1
+# http://docs.couchdb.org/en/latest/maintenance/compaction.html
+# curl -H "Content-Type: application/json" -X POST $(LHCOUCHAUTH):3456/dbname/_compact
+# curl -H "Content-Type: application/json" -X POST $(LHCOUCHAUTH):3456/dbname/_compact/designdocname
+
+# View cleanup is not done automatically, but should not be handled by the server 'couchdb:cleanup-after-design-docs-changes' script
+# curl -H "Content-Type: application/json" -X POST $(LHCOUCHAUTH):3456/entities-prod/_view_cleanup
+# curl -H "Content-Type: application/json" -X POST $(LHCOUCHAUTH):3456/patches-prod/_view_cleanup
+# curl -H "Content-Type: application/json" -X POST $(LHCOUCHAUTH):3456/tasks-prod/_view_cleanup
