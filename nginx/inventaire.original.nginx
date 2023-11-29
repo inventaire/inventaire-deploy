@@ -63,7 +63,7 @@ server {
 
     include /etc/nginx/snippets/ssl.conf;
 
-    client_max_body_size 5M;
+    client_max_body_size 25M;
 
     # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
     # https://en.wikipedia.org/wiki/BREACH_(security_exploit)#Mitigation
