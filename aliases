@@ -79,8 +79,7 @@ gjo () {
   git checkout origin/$1 && git checkout -B $1
 }
 gcom () {
-  [[ "$(gb -l main)" =~ [[main]]*$ ]] && gco main
-  [[ "$(gb -l master)" =~ [[master]]*$ ]] && gco master
+  gco main
 }
 gjoc () {
     branch=$(git symbolic-ref --short HEAD)
@@ -88,10 +87,10 @@ gjoc () {
     git checkout -q -B $branch
 }
 alias gfj='git fetch --all && gjoc'
-alias gjom="gjo master"
+alias gjom="gjo main"
 alias gf="git fetch"
 alias gfo="git fetch origin"
-alias gfom="git fetch origin master"
+alias gfom="git fetch origin main"
 alias gcop="git checkout -p"
 alias gap="git add --patch"
 alias gslast="git show HEAD"
