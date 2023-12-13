@@ -186,6 +186,11 @@ server {
             proxy_pass http://127.0.0.1:3007;
             break;
         }
+        # Redirect bots and crawlers that were excluded from prerendering to the alt server too
+        if ($http_user_agent ~* "bot|index|spider|crawl") {
+            proxy_pass http://127.0.0.1:3007;
+            break;
+        }
         proxy_pass http://inventaire;
     }
 
@@ -235,7 +240,8 @@ server {
         #proxy_set_header X-Prerender-Token YOUR_TOKEN;
 
         set $prerender 0;
-        if ($http_user_agent ~* "bot|index|spider|crawl|facebookexternalhit|embedly|quora|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp|Discourse|Iframely") {
+        # ~* is case insensitive http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#if:~:text=case-insensitive%20matching
+        if ($http_user_agent ~* "bot|index|spider|crawl|facebook|embedly|quora|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp|Discourse|Iframely") {
             set $prerender 1;
         }
         if ($args ~ "_escaped_fragment_") {
@@ -243,6 +249,16 @@ server {
         }
         if ($args ~ "__nojs") {
             set $prerender 1;
+        }
+        # - Bots that do there own prerendering: Googlebot, bingbot, Yandex, Applebot
+        #   To identify bots that do their own prerendering:
+        #     1/ add them to this list
+        #     2/ see if they make requests on /api by themselves, with the following command:
+        #        journalctl -u nginx --since today --grep BotName | grep '/api'
+        # - SEO/spammer bots that should do there own prerendering
+        # Currently allowed to use the prerender service, but should eventually be added to this list: GPTBot
+        if ($http_user_agent ~* "bingbot|Yandex|Googlebot|SemrushBot|Applebot|PetalBot|DotBot|Barkrowler|Bytespider|AhrefsBot|seo") {
+            set $prerender 0;
         }
         if ($http_user_agent ~ "Prerender") {
             set $prerender 0;
