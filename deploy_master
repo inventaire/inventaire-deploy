@@ -23,10 +23,16 @@
 - curljson -XPOST "https://[credentials]@inventaire.io/api/tasks?action=collect-entities"
 
 ### i18n
-- commit on master server branch
-- `cd ..`
-- `npm run update-i18n`
+
 - `cd inventaire/client/inventaire-i18n`
-- `npm run update-dist`
+=> Make sure weblate remote exists: `git remote add weblate https://weblate.framasoft.org/git/inventaire/server/`
+
+#### Update
+/!\  Weblate do not work well with force push branches, prefer giving weblate branches priority:
+- `git fetch weblate main && git checkout weblate/main && git checkout -B main`
+- commit on main server branch
+- `./scripts/reorder/reorder_all_resources`
+- `git push origin main`
+=> weblate hooks will take over updates
 - `cd inventaire/client`
-- compile and rsync client
+=> compile and push client
