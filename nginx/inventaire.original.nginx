@@ -84,6 +84,9 @@ server {
     # it does put the resized images in /tmp/nginx/resize, so using a try_files
     # directive instead
 
+    # Sometimes, for some unidentified reason, the cached files end up empty, so it can be useful to add a root cron to remove those files:
+    # 0 4 * * * /usr/bin/find /tmp/nginx -type f -size 0 -delete
+
     # Do not remove the (.*) capture group as it seems to be required by the try_files
     location ~ ^/img/(groups|users|entities|assets)/(.*) {
        include /etc/nginx/snippets/security_headers.conf;
