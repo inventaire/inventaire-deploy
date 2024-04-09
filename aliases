@@ -34,6 +34,8 @@ alias npmd="npm run dist"
 alias npmw="npm run watch"
 #alias npmd="npm run debug"
 alias npmus="npm uninstall --save"
+alias ni="npmi"
+alias nig="npmig"
 alias nl="npm run lint"
 alias nb="npm run build"
 
