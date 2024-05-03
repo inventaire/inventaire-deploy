@@ -146,6 +146,7 @@ disk_benchmark(){
 alias disk_space="df -h"
 alias firewall_rules="sudo iptables -L"
 alias ufws="sudo ufw status verbose"
+alias bat="batcat"
 
 find_container_using_volume(){
   volume_id=$1
