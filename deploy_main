@@ -2,6 +2,7 @@
 
 - pull changes
 - install new libs `npm install --production`
+- `npm run build`
 - `sudo systemctl restart inventaire-alt`
 - check if everything is fine: `journalctl -u inventaire-alt -af`
 - `sudo systemctl restart inventaire`
@@ -36,3 +37,6 @@
 => weblate hooks will take over updates
 - `cd inventaire/client`
 => compile and push client
+
+# Add role
+npm run db-actions:update-user-role [userId] add dataadmin
