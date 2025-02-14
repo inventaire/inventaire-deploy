@@ -114,23 +114,6 @@ server {
        }
     }
 
-    location ~ ^/img/(\d+)x(\d+)/(.*) {
-        include /etc/nginx/snippets/security_headers.conf;
-        return 404;
-    }
-
-    location @invimg {
-      include /etc/nginx/snippets/security_headers.conf;
-      default_type "image/jpeg";
-      add_header X-File-Cache "miss";
-      add_header Content-Security-Policy "sandbox";
-      proxy_temp_path      /tmp/nginx/tmp;
-      proxy_store          /tmp/nginx/resize/$uri;
-      proxy_store_access   user:rw  group:rw  all:r;
-      proxy_http_version 1.1;
-      proxy_pass http://inventaire;
-    }
-
     # following aliases made in order to respect the url structure
     # the server alone would follow: especially, mounting /static on /public
     root  PROJECT_ROOT/inventaire/client;
@@ -232,67 +215,5 @@ server {
         limit_except GET {
            deny all;
        }
-    }
-
-    # Dispatching requests between the JS-rendered client (for browsers)
-    # or the prerendered version (for bots, curl and alikes)
-    # To setup a Prerender server, see https://github.com/inventaire/prerender
-
-    # Adapted from https://gist.github.com/thoop/8165802
-    location @prerender {
-        #proxy_set_header X-Prerender-Token YOUR_TOKEN;
-
-        set $prerender 0;
-        # ~* is case insensitive http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#if:~:text=case-insensitive%20matching
-        if ($http_user_agent ~* "bot|index|spider|crawl|facebook|embedly|quora|outbrain|pinterest|vkShare|W3C_Validator|curl|wget|slurp|Discourse|Iframely") {
-            set $prerender 1;
-        }
-        if ($args ~ "_escaped_fragment_") {
-            set $prerender 1;
-        }
-        if ($args ~ "__nojs") {
-            set $prerender 1;
-        }
-        # - Bots that do there own prerendering: Googlebot, bingbot, Yandex, Applebot
-        #   To identify bots that do their own prerendering:
-        #     1/ add them to this list
-        #     2/ see if they make requests on /api by themselves, with the following command:
-        #        journalctl -u nginx --since today --grep BotName | grep '/api'
-        # - SEO/spammer bots that should do there own prerendering
-        # Currently allowed to use the prerender service, but should eventually be added to this list: GPTBot
-        if ($http_user_agent ~* "bingbot|Yandex|Googlebot|SemrushBot|Applebot|PetalBot|DotBot|Barkrowler|Bytespider|AhrefsBot|seo") {
-            set $prerender 0;
-        }
-        if ($http_user_agent ~ "Prerender") {
-            set $prerender 0;
-        }
-        if ($uri ~ "\.(js|css|xml|less|png|jpg|jpeg|gif|pdf|doc|txt|ico|rss|zip|mp3|rar|exe|wmv|doc|avi|ppt|mpg|mpeg|tif|wav|mov|psd|ai|xls|mp4|m4a|swf|dat|dmg|iso|flv|m4v|torrent|ttf|woff)") {
-            set $prerender 0;
-        }
-
-        proxy_http_version 1.1;
-        # Allows Firefox Headless Prerender to send 429 errors in case of abuse
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-        if ($prerender = 1) {
-            #setting prerender as a variable forces DNS resolution since nginx caches IPs and doesnt play well with load balancing
-            # set $prerender "92.222.76.42:3000";
-            rewrite .* /$scheme://$host$request_uri? break;
-            proxy_pass PRERENDER_INSTANCE;
-        }
-        if ($prerender = 0) {
-            include /etc/nginx/snippets/security_headers.conf;
-
-            add_header Report-To '{"max_age":10886400,"endpoints":[{"url":"https://inventaire.io/api/reports?action=csp-report"}]}'
-            add_header Content-Security-Policy-Report-Only "default-src 'self' www.wikidata.org; child-src 'self' 'blob'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' commons.wikimedia.org api.tiles.mapbox.com piwik.allmende.io data:; report-uri /api/reports?action=csp-report; report-to default"
-
-            # index.html should always be fresh out of the server
-            # time is negative => “Cache-Control: no-cache”
-            # http://nginx.org/en/docs/http/ngx_http_headers_module.html
-            # Those headers should be set here and not at "location /" as they would be ignored (cf http://serverfault.com/a/786248)
-            expires -1;
-
-            rewrite .* /public/index.html break;
-        }
     }
 }
