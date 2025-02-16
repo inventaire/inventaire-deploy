@@ -1,0 +1,9 @@
+# Setup cron by running `cat jobs.cron | crontab -`
+
+# m h day-of-month month day-of-week   command
+
+NODE_ENV=production
+NODE_APP_INSTANCE=primary
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/home/admin/.nvm/versions/node/v18.16.1/bin
+
+0 3 18 * * cd /home/admin/inventaire && npm run create-entities-dumps > "/home/admin/inventaire/logs/dumps-$(date -I).log" 2>&1
