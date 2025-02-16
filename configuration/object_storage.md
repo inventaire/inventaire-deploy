@@ -1,37 +1,23 @@
-# media storage
+# Swift media storage and management
 
-For media storage, we use an OpenStack Swift provider, currently OVH, with 3 containers (`assets`, `entities`, `users`) replicated between 2 regions ([learning from previous mistakes](https://twitter.com/olesovhcom/status/1369478732247932929)).
-
-## OpenStack Swift
-
-The best way to manipulate objects in the containers is the python swift client:
+The easiest way to manage the images stored in OpenStack Swift containers is to use the [official CLI client](https://docs.openstack.org/python-swiftclient/latest/cli/index.html). On Debian-based systems, it can be installed with the following command:
 ```sh
-sudo apt-get install python-swiftclient -y
+sudo apt-get install python3-swiftclient -y
 ```
 
-Load the environment from the config file which can be downloaded from the provider, see:
-- https://docs.ovh.com/fr/public-cloud/charger-les-variables-denvironnement-openstack/
-- https://www.ovh.com/manager/public-cloud/index.html#/pci/projects/5897bfd533bf4d3ca0a0522046f9f535/users
+Get authentification environment variables from your OpenStack Swift provider:
+* [OVH](https://docs.ovh.com/us/en/public-cloud/set-openstack-environment-variables/)
 
 ```sh
-source ./openrc.sh
+# Load the environment from the config file
+source ./openrc_ovh.sh
+
 # List containers in the ENV REGIONS
 swift list
+
 # Create a container with the content of the current folder
 swift upload testcontainer .
+
 # Make that new container public
 swift post --read-acl '.r:*,.rlistings' testcontainer
 ```
-
-### Replication
-To created the replicated containers:
-* load the config for that other region
-```
-source ./openrc_backup.sh
-```
-* re-create the empty containers on the secondary location
-```
-swift upload testcontainer .
-swift post --read-acl '.r:*,.rlistings' testcontainer
-```
-* Follow this [tutorial](https://docs.ovh.com/gb/en/public-cloud/sync-object-containers/) to set the sync key on those containers on both regions, and start synchronizing.
