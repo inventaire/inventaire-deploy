@@ -21,8 +21,8 @@ sudo apt-get install curl zsh git nginx graphicsmagick openssl inotify-tools sof
 
 Follow docker-inventaire install instructions: https://github.com/inventaire/docker-inventaire
 ```sh
-curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/main/aliases > ~/.aliases
-curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/main/zshrc > ~/.zshrc
+curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/main/aliases > ~/misc/.aliases
+curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/main/zshrc > ~/misc/.zshrc
 
 curl https://raw.githubusercontent.com/inventaire/inventaire-deploy/main/nginx/inventaire.sandbox.nginx > /etc/nginx/sites-enabled/default
 
