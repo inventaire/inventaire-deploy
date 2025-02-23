@@ -4,10 +4,10 @@ Tools and scripts to document the installation of [inventaire](https://github.co
 
 See also [docker-inventaire](https://github.com/inventaire/docker-inventaire)
 
-:warning: You may do anything the [AGPL-3.0 license](https://en.wikipedia.org/wiki/GNU_Affero_General_Public_License) allows you to, but this documentation is not an invitation to self-host your own instance (Inventaire is not ready/optimized for [decentralization](https://github.com/inventaire/inventaire/issues/187) or for [self-hosting](https://wiki.inventaire.io/wiki/Framasoft_interview_translation#Is_it_possible_to_self-host_inventaire)).
-
 ## Installation
-### Ubuntu
+
+### Debian/Ubuntu
+
 On your server:
 ```sh
 # if git isn't installed already
@@ -15,7 +15,8 @@ sudo apt-get install git
 # cloning the deployment tools in the local directory
 git clone https://github.com/inventaire/inventaire-deploy
 ```
-Now you 'just have' to install everything: see `./install` for a realistic preview of what that could look like (but don't just execute that script as it's more meant as a documentation)
+
+Now you 'just have' to install everything: see `./installation/install` for a realistic preview of what that could look like.
 
 You might also want to configure your firewall: see `./setup_firewall`
 
