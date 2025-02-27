@@ -1,8 +1,8 @@
 # inventaire-deploy
 
-Tools and scripts to document the installation of [inventaire](https://github.com/inventaire/inventaire) in production.
+Tools and scripts to document the installation of [inventaire](https://git.inventaire.io/inventaire) in production.
 
-See also [docker-inventaire](https://github.com/inventaire/docker-inventaire)
+See also [docker-inventaire](https://git.inventaire.io/docker-inventaire)
 
 ## Installation
 
@@ -13,7 +13,7 @@ On your server:
 # if git isn't installed already
 sudo apt-get install git
 # cloning the deployment tools in the local directory
-git clone https://github.com/inventaire/inventaire-deploy
+git clone https://git.inventaire.io/inventaire-deploy
 ```
 
 Now you 'just have' to install everything: see `./installation/install` for a realistic preview of what that could look like.
@@ -30,7 +30,7 @@ There are also some other environement documented on the [wiki](https://wiki.inv
 ## Other services
 
 By default, this setup uses the same services as [inventaire.io](https://inventaire.io), but you can start your own instance of those too:
-* [Prerender](https://github.com/inventaire/prerender)
+* [Prerender](https://git.inventaire.io/prerender)
 
 ## Stack Map
 This repo correspond to the the "deployment scripts" in the [stack map](https://inventaire.github.io/stack/)

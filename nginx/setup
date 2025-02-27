@@ -6,7 +6,7 @@ read -p "Enter a domain name (defaults to inventaire.io) " DOMAIN_NAME
 # if domain name is an empty string, default to inventaire.io
 [ -z "$DOMAIN_NAME" ] && DOMAIN_NAME='inventaire.io'
 
-read -p "Enter the url of your Prerender (https://github.com/inventaire/prerender) instance (defaults to http://localhost:3000) " PRERENDER_INSTANCE
+read -p "Enter the url of your Prerender (https://git.inventaire.io/prerender) instance (defaults to http://localhost:3000) " PRERENDER_INSTANCE
 [ -z "$PRERENDER_INSTANCE" ] && PRERENDER_INSTANCE='http://localhost:3000'
 
 read -p "Enter the IP of your Prerender instance (defaults to 0.0.0.0) " PRERENDER_IP
