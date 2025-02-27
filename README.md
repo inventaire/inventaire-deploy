@@ -25,6 +25,8 @@ one environment -> one branch
 
 Want to install it in a different environment? Request a new (orphan) branch and send your pull request!
 
+There are also some other environement documented on the [wiki](https://wiki.inventaire.io/wiki/Deployment).
+
 ## Other services
 
 By default, this setup uses the same services as [inventaire.io](https://inventaire.io), but you can start your own instance of those too:
