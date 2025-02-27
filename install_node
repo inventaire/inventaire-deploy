@@ -5,12 +5,12 @@ set -eo pipefail
 tmpdir=$(mktemp -d)
 
 # installing NVM, the NodeJS verion manager https://github.com/nvm-sh/nvm
-curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh -o "${tmpdir}/install.sh"
+curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh -o "${tmpdir}/install.sh"
 
 # Check that it is the right file before executing
 echo 0b882590028d326ce5d07a198c1061d2ab2ba00e3631e8ed96f65a60d06a8619 "${tmpdir}/install.sh" | sha256sum --check --strict
 bash "${tmpdir}/install.sh"
 source ~/.nvm/nvm.sh
 
-nvm install 14
+nvm install 20
 npm install -g --production lev2 couchdb-bulk2 add-to-systemd
