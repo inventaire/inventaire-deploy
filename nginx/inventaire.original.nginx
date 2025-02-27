@@ -8,8 +8,7 @@ log_format custom '$remote_addr - $remote_user "$request" $status'
                   ' | time: $request_time'
                   ' | length: req $request_length / res $body_bytes_sent'
                   ' | agent: $http_user_agent'
-                  ' | referer: $http_referer'
-                  ' | gzip ratio: $gzip_ratio';
+                  ' | referer: $http_referer';
 
 # Access logs from journalctl
 access_log syslog:server=unix:/dev/log custom;
@@ -65,12 +64,11 @@ server {
 
     client_max_body_size 25M;
 
-    # As long as no secret/sensible data are passed in the body, the BREACH exploit on TLS+compression shouldn't be a concern. Right?
+    # Disabling compression to mitigate BREACH exploit
     # https://en.wikipedia.org/wiki/BREACH_(security_exploit)#Mitigation
     # http://security.stackexchange.com/questions/39925/breach-a-new-attack-against-http-what-can-be-done
-    # It could be that it was solved by HTTP/2 \o/ https://blog.cloudflare.com/hpack-the-silent-killer-feature-of-http-2
-    gzip on;
-    gzip_types *;
+    # until we can confidently say that HTTP/2 solves the issue?  https://blog.cloudflare.com/hpack-the-silent-killer-feature-of-http-2
+    gzip off;
 
     # On-The-Fly Image Resizer
 
