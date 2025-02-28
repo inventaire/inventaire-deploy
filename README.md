@@ -1,36 +1,24 @@
-# inventaire-deploy
+# inventaire.io in production
 
-Tools and scripts to document the installation of [inventaire](https://git.inventaire.io/inventaire) in production.
+Tools and scripts to document the setup of [Inventaire](https://github.com/inventaire/inventaire) in production at https://inventaire.io.
 
-See also [docker-inventaire](https://git.inventaire.io/docker-inventaire)
+This is a reference implementation, instructed by preferences, choices, and experience running Inventaire in production, but other implementations are possible: for a less opiniated, more general documentation, see [general technical Inventaire documentation](https://github.com/inventaire/inventaire/docs). See also [docker-inventaire](https://github.com/inventaire/docker-inventaire)
+
+## Stack Map
+This repo correspond to the the "deployment scripts" in the [stack map](https://inventaire.github.io/stack/)
 
 ## Installation
-
 ### Debian/Ubuntu
-
-On your server:
 ```sh
 # if git isn't installed already
 sudo apt-get install git
 # cloning the deployment tools in the local directory
 git clone https://git.inventaire.io/inventaire-deploy
 ```
-
-Now you 'just have' to install everything: see `./installation/install` for a realistic preview of what that could look like.
+Now you 'just have' to install everything: see `./install` for a realistic preview of what that could look like (but don't just execute those scripts as they are more meant as a documentation with shell formatting)
 
 You might also want to configure your firewall: see `./setup_firewall`
 
-### Other environments
-one environment -> one branch
+## inventaire.io specific services
 
-Want to install it in a different environment? Request a new (orphan) branch and send your pull request!
-
-There are also some other environement documented on the [wiki](https://wiki.inventaire.io/wiki/Deployment).
-
-## Other services
-
-By default, this setup uses the same services as [inventaire.io](https://inventaire.io), but you can start your own instance of those too:
-* [Prerender](https://git.inventaire.io/prerender)
-
-## Stack Map
-This repo correspond to the the "deployment scripts" in the [stack map](https://inventaire.github.io/stack/)
+* [Prerender](https://github.com/inventaire/prerender)
