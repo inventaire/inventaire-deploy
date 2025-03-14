@@ -33,6 +33,8 @@ sudo mkdir -p /etc/systemd/system/couchdb.service.d/
 echo '
 [Service]
 Environment=COUCHDB_QUERY_SERVER_JAVASCRIPT="/opt/couchdb/bin/couchjs -S 536870912 /opt/couchdb/share/server/main.js"
+# See https://docs.couchdb.org/en/stable/maintenance/performance.html#disk-and-file-system-performance
+Environment=ERL_FLAGS="+A 4"
 ' | sudo tee /etc/systemd/system/couchdb.service.d/override.conf
 
 sudo systemctl daemon-reload
